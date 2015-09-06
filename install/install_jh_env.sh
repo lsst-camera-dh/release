@@ -64,14 +64,14 @@ scons opt=3
 #./run_all.py
 
 cd ${inst_dir}
-#curl -L -O https://github.com/lsst-camera-dh/harnessed-jobs/archive/${harnessedjobs_version}.tar.gz
-#tar xf ${harnessedjobs_version}.tar
-git clone https://github.com/lsst-camera-dh/harnessed-jobs.git
-mv harnessed-jobs harnessed-jobs-${harnessedjobs_version}
-cd harnessed-jobs-${harnessedjobs_version}
-git pull
-git checkout ${harnessedjobs_version}
-cd ${inst_dir}
+curl -L -O https://github.com/lsst-camera-dh/harnessed-jobs/archive/${harnessedjobs_version}.tar.gz
+tar xzf ${harnessedjobs_version}.tar.gz
+#git clone https://github.com/lsst-camera-dh/harnessed-jobs.git
+#mv harnessed-jobs harnessed-jobs-${harnessedjobs_version}
+#cd harnessed-jobs-${harnessedjobs_version}
+#git pull
+#git checkout ${harnessedjobs_version}
+#cd ${inst_dir}
 ln -sf ${inst_dir}/harnessed-jobs-${harnessedjobs_version}/SLAC/* ${inst_dir}/share
 
 echo export STACK_DIR=${stack_dir} > setup.sh
