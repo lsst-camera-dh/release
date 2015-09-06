@@ -1,6 +1,6 @@
-eotest_version=0.0.1.1
-harnessedjobs_version=SLAC-2015-07-22
-lcatrHarness_version=0.5
+eotest_version=0.0.1.7
+harnessedjobs_version=0.0.1
+lcatrHarness_version=0.6.0
 lcatrSchema_version=0.4.3
 lcatrModulefiles_version=0.3.1
 

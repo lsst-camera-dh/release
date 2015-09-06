@@ -1,13 +1,6 @@
-4 Aug 2015
-This directory contains the release installations of the job harness environment for SLAC.
-Versions of the installation are stored in subdirectories named according to
-the tag associated with the harnessed_jobs package.
+5 Sep 2015
+This directory contains the installation script for the job harness environment.
 
-The current release version is symlinked to the "release" directory.
-
-The installationScript subdirectory contains versions of the installation
-script itself. The most current version is symlinked to the top-level directory
-and is named install_jh_env.sh
 To use the install script:
 1. Create new target directory:  mkdir myNewInstall
 2. cp install_jh_env.sh myNewInstall
