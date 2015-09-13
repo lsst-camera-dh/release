@@ -1,6 +1,6 @@
 eotest_version=0.0.1.7
-harnessedjobs_version=0.0.3
-lcatrHarness_version=0.6.0
+harnessedjobs_version=0.0.4
+lcatrHarness_version=0.7.0
 lcatrSchema_version=0.4.3
 lcatrModulefiles_version=0.3.1
 
