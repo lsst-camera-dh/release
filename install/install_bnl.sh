@@ -1,5 +1,5 @@
-eotest_version=0.0.2
-harnessedjobs_version=0.0.5
+eotest_version=0.0.3
+harnessedjobs_version=0.0.6
 lcatrHarness_version=0.7.0
 lcatrSchema_version=0.4.3
 lcatrModulefiles_version=0.3.1
