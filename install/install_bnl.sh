@@ -72,7 +72,8 @@ tar xzf ${harnessedjobs_version}.tar.gz
 #git pull
 #git checkout ${harnessedjobs_version}
 #cd ${inst_dir}
-ln -sf ${inst_dir}/harnessed-jobs-${harnessedjobs_version}/SLAC/* ${inst_dir}/share
+ln -sf ${inst_dir}/harnessed-jobs-${harnessedjobs_version} ${inst_dir}/harnessed-jobs
+ln -sf ${inst_dir}/harnessed-jobs/BNL_T03/* ${inst_dir}/share
 
 echo export STACK_DIR=${stack_dir} > setup.sh
 echo source \${STACK_DIR}/loadLSST.bash >> setup.sh

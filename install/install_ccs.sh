@@ -22,3 +22,15 @@ download org-lsst-ccs-subsystem-teststand-buses ${TESTSTAND_VERSION}
 download org-lsst-ccs-subsystem-teststand-gui ${TESTSTAND_VERSION}
 download org-lsst-ccs-localdb-main ${LOCALDB_VERSION}
 download org-lsst-ccs-subsystem-console ${CONSOLE_VERSION}
+mkdir bin
+cd bin
+ln -sf ../org-lsst-ccs-subsystem-teststand-main/bin/CCSbootstrap.sh ts
+ln -sf ../org-lsst-ccs-subsystem-teststand-main/bin/CCSbootstrap.sh tsSim
+ln -sf ../org-lsst-ccs-subsystem-archon-main/bin/CCSbootstrap.sh archon
+ln -sf ../org-lsst-ccs-subsystem-archon-main/bin/CCSbootstrap.sh archonSim
+ln -sf ../org-lsst-ccs-subsystem-teststand-main/bin/CCSbootstrap.sh CCS-Console
+ln -sf ../org-lsst-ccs-subsystem-teststand-main/bin/CCSbootstrap.sh JythonConsole
+ln -sf ../org-lsst-ccs-subsystem-teststand-main/bin/CCSbootstrap.sh ShellCommandConsole
+ln -sf ../org-lsst-ccs-localdb-main/bin/trendingPersister.sh trendingPersister.sh
+ln -sf ../org-lsst-ccs-localdb-main/bin/trendingServer.sh trendingServer
+ln -sf ../org-lsst-ccs-subsystem-teststand-gui/bin/tsJas.sh tsGui
