@@ -24,7 +24,8 @@ download org-lsst-ccs-localdb-main ${LOCALDB_VERSION}
 download org-lsst-ccs-subsystem-console ${CONSOLE_VERSION}
 mkdir bin
 cd bin
-ln -sf ../org-lsst-ccs-subsystem-teststand-main/bin/CCSbootstrap.sh ts
+ln -sf ../org-lsst-ccs-subsystem-teststand-main/bin/ts_bnlts3setup2.sh ts
+ln -sf ../org-lsst-ccs-subsystem-teststand-main/bin/ts_bnlts3.sh ts
 ln -sf ../org-lsst-ccs-subsystem-teststand-main/bin/CCSbootstrap.sh tsSim
 ln -sf ../org-lsst-ccs-subsystem-archon-main/bin/CCSbootstrap.sh archon
 ln -sf ../org-lsst-ccs-subsystem-archon-main/bin/CCSbootstrap.sh archonSim
