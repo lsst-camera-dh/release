@@ -20,7 +20,7 @@ cd ${inst_dir}
 #
 # Setup the LSST stack to ensure we are using anaconda python
 #
-stack_dir=/nfs/farm/g/lsst/u1/software/DMstack/Winter2015/redhat6-x86_64-64bit-gcc44
+stack_dir=/nfs/farm/g/lsst/u1/software/redhat6-x86_64-64bit-gcc44/DMstack/Winter2015
 source ${stack_dir}/loadLSST.bash
 
 #
