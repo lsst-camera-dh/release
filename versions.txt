@@ -1,0 +1,14 @@
+[dev]
+eotest = 0.0.3
+harnessed-jobs = 0.1.2
+lcatr-harness = 0.8.3
+lcatr-schema = 0.4.3
+lcatr-modulefiles = 0.3.1
+
+[BNL]
+stack_dir = /opt/lsst/redhat6-x86_64-64bit-gcc44/DMstack/Winter2015
+
+[SLAC]
+stack_dir = /nfs/farm/g/lsst/u1/software/redhat6-x86_64-64bit-gcc44/DMstack/Winter2015
+
+
