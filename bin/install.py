@@ -25,10 +25,9 @@ class Parfile(dict):
 
 class Installer(object):
     _github_org = 'https://github.com/lsst-camera-dh'
-    def __init__(self, version_file, section='dev', inst_dir='.',
+    def __init__(self, version_file, inst_dir='.',
                  hj_folders=('BNL_T03',), site='BNL'):
         self.version_file = os.path.abspath(version_file)
-        self.pars = Parfile(self.version_file, section)
         self.inst_dir = os.path.abspath(inst_dir)
         self.hj_folders = hj_folders
         self.site = site
@@ -95,8 +94,13 @@ PS1="[jh]$ "
         output = open(os.path.join(self.inst_dir, 'setup.sh'), 'w')
         output.write(contents)
         output.close()
-    def run(self):
+
+    def jh(self, prod=False, section='jh_dev'):
         os.chdir(self.inst_dir)
+        if prod:
+            section = 'jh_prod'
+            print "Installing production versions of Job Harness software"
+        self.pars = Parfile(self.version_file, section)
         self.modules_install()
         self.lcatr_install('lcatr-harness')
         self.lcatr_install('lcatr-schema')
@@ -115,11 +119,59 @@ PS1="[jh]$ "
             subprocess.call('ln -sf %(inst_dir)s/harnessed-jobs-%(hj_version)s/%(folder)s/* %(inst_dir)s/share' % locals(), shell=True)
         self.write_setup()
         os.chdir(self.curdir)
-    def test(self):
+
+    def jh_test(self):
         os.chdir(self.inst_dir)
         hj_version = self.pars['harnessed-jobs']
         command = 'source ./setup.sh; python harnessed-jobs-%(hj_version)s/tests/setup_test.py' % locals()
         subprocess.call(command, shell=True)
+        os.chdir(self.curdir)
+
+    def _ccs_download(self, package_name, sub_system):
+        base_url = "http://dev.lsstcorp.org:8081/nexus/service/local/artifact/maven/redirect?r=ccs-maven2-public&g=org.lsst"
+        command = 'wget "%(base_url)s&a=%(package_name)s&v=%(sub_system)s&e=zip&c=dist" -O temp.zip' % locals()
+        subprocess.call(command, shell=True)
+        subdir = '-'.join((package_name, sub_system))
+        if os.path.isdir(subdir):
+            subprocess.call('rm -r %(subdir)s' % locals(), shell=True)
+        subprocess.call('unzip -uo temp.zip', shell=True)
+        subprocess.call('rm temp.zip', shell=True)
+        subprocess.call('ln -sf %(subdir)s %(package_name)s' % locals(), shell=True)
+
+    def ccs(self, inst_dir, prod=False, section='ccs_dev'):
+        os.chdir(inst_dir)
+        if prod:
+            section = 'ccs_prod'
+            print "Installing production versions of CCS software"
+        pars = Parfile(self.version_file, section)
+        for package in ['org-lsst-subsystem-' + x for x in 
+                        'archon-main archon-buses archon-gui'.split()]:
+            self._ccs_download(package, pars['archon'])
+        for package in ['org-lsst-subsystem-' + x for x in 
+                        'teststand-main teststand-buses teststand-gui'.split()]:
+            self._ccs_download(package, pars['teststand'])
+        self._ccs_download('org-lsst-ccs-localdb-main', pars['localdb'])
+        self._ccs_download('org-lsst-ccs-subsystem-console', pars['console'])
+
+        try:
+            os.mkdir('bin')
+        except OSError:
+            # bin directory already exists(?)
+            pass
+        os.chdir('bin')
+        commands = """ln -sf ../org-lsst-ccs-subsystem-teststand-main/bin/CCSbootstrap.sh ts
+ln -sf ../org-lsst-ccs-subsystem-teststand-main/bin/CCSbootstrap.sh tsSim
+ln -sf ../org-lsst-ccs-subsystem-archon-main/bin/CCSbootstrap.sh archon
+ln -sf ../org-lsst-ccs-subsystem-archon-main/bin/CCSbootstrap.sh archonSim
+ln -sf ../org-lsst-ccs-subsystem-teststand-gui/bin/CCSbootstrap.sh CCS-Console
+ln -sf ../org-lsst-ccs-subsystem-teststand-main/bin/CCSbootstrap.sh JythonConsole
+ln -sf ../org-lsst-ccs-subsystem-teststand-main/bin/CCSbootstrap.sh ShellCommandConsole
+ln -sf ../org-lsst-ccs-localdb-main/bin/trendingPersister.sh trendingPersister.sh
+ln -sf ../org-lsst-ccs-localdb-main/bin/trendingServer.sh trendingServer
+ln -sf ../org-lsst-ccs-subsystem-teststand-gui/bin/tsJas.sh tsGui
+""".split('\n')
+        for command in commands:
+            subprocess.call(command, shell=True)
         os.chdir(self.curdir)
 
 if __name__ == '__main__':
@@ -132,10 +184,16 @@ if __name__ == '__main__':
     parser.add_argument('--site', type=str, default='BNL',
                         help='Site (BNL, SLAC, etc.)')
     parser.add_argument('--hj_folders', type=str, default="BNL_TO3")
+    parser.add_argument('--ccs_inst_dir', type=str, default=None)
+    parser.add_argument('--prod', action='store_true', default=False,
+                        help='Install production versions')
 
     args = parser.parse_args()
-
+    
     installer = Installer(args.version_file, inst_dir=args.inst_dir,
                           hj_folders=args.hj_folders.split(), site=args.site)
-    installer.run()
-    installer.test()
+    installer.jh(prod=args.prod)
+    installer.jh_test()
+
+    if args.ccs_inst_dir is not None:
+        installer.ccs(args.ccs_inst_dir, prod=args.prod)
