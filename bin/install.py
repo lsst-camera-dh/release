@@ -138,4 +138,4 @@ if __name__ == '__main__':
     installer = Installer(args.version_file, inst_dir=args.inst_dir,
                           hj_folders=args.hj_folders.split(), site=args.site)
     installer.run()
-#    installer.test()
+    installer.test()
