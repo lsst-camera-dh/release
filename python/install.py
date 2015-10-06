@@ -1,3 +1,4 @@
+#!/usr/bin/env python
 import os
 import subprocess
 import ConfigParser
@@ -28,7 +29,7 @@ class Installer(object):
                  hj_folders=('BNL_T03',), site='BNL'):
         self.version_file = version_file
         self.pars = Parfile(version_file, section)
-        self.inst_dir = inst_dir
+        self.inst_dir = os.path.abspath(inst_dir)
         self.hj_folders = hj_folders
         self.site = site
         self._stack_dir = None
@@ -36,15 +37,17 @@ class Installer(object):
     def github_download(self, package_name):
         version = self.pars[package_name]
         url = '/'.join((self._github_org, package_name, 'archive',
-                        version + '.tag.gz'))
+                        version + '.tar.gz'))
         commands = ["curl -L -O " + url,
-                    "tar xzf %(version).tar.gz" % locals()]
+                    "tar xzf %(version)s.tar.gz" % locals()]
         for command in commands:
-            subprocess_call(command, shell=True)
+            subprocess.call(command, shell=True)
 
     def lcatr_install(self, package_name):
         self.github_download(package_name)
-        command = "cd %(package_name)s-%(version)s/; python setup.py install --prefix=%(inst_dir)s"
+        version = self.pars[package_name]
+        inst_dir = self.inst_dir
+        command = "cd %(package_name)s-%(version)s/; python setup.py install --prefix=%(inst_dir)s" % locals()
         subprocess.call(command, shell=True)
 
     @property
@@ -55,11 +58,11 @@ class Installer(object):
         return self._stack_dir
 
     def write_setup(self):
-        stack_dir = self.pars['stack_dir']
+        stack_dir = self.stack_dir
         inst_dir = self.inst_dir
         hj_version = self.pars['harnessed-jobs']
         site = self.site
-        module_path = subprocess.check_output('ls -d %(inst_dir)s/lib/python*/site-packages', shell=True)
+        module_path = subprocess.check_output('ls -d %(inst_dir)s/lib/python*/site-packages' % locals(), shell=True)
         contents = """export STACK_DIR=%(stack_dir)s
 source ${STACK_DIR}/loadLSST.bash
 export INST_DIR=%(inst_dir)s
@@ -67,7 +70,6 @@ export EUPS_PATH=${INST_DIR}/eups:${EUPS_PATH}
 setup eotest
 setup mysqlpython
 export VIRTUAL_ENV=${INST_DIR}
-source ${INST_DIR}/Modules/3.2.10/init/bash
 export DATACATPATH=/afs/slac/u/gl/srs/datacat/dev/0.3/lib
 export HARNESSEDJOBSDIR=${INST_DIR}/harnessed-jobs-%(hj_version)s
 export PYTHONPATH=${DATACATPATH}:${HARNESSEDJOBSDIR}/python:%(module_path)s:${PYTHONPATH}
@@ -87,26 +89,21 @@ PS1="[jh]$ "
         subprocess.call('ln -sf %(inst_dir)s/share/modulefiles %(inst_dir)s/Modules' % locals(), shell=True)
         subprocess.call('touch `ls -d %(inst_dir)s/lib/python*/site-packages/lcatr`/__init__.py' % locals(), shell=True)
         self.github_download('eotest')
+        stack_dir = self.stack_dir
         eotest_version = self.pars['eotest']
-        os.chdir('eotest-' + eotest_version)
-        commands = ['eups declare eotest %(eotest_version)s -r . -c' % locals(),
-                    'setup eotest', 
-                    'setup mysqlpython',
-                    'scons opt=3']
-        for command in commands:
-            subprocess.call(command, shell=True)
-        os.chdir(inst_dir)
+        commands = """source %(stack_dir)s/loadLSST.bash; mkdir -p %(inst_dir)s/eups/ups_db; export EUPS_PATH=%(inst_dir)s/eups:${EUPS_PATH}; cd eotest-%(eotest_version)s/; eups declare eotest %(eotest_version)s -r . -c; setup eotest; setup mysqlpython; scons opt=3""" % locals()
+        subprocess.call(commands, shell=True)
         self.github_download('harnessed-jobs')
         hj_version = self.pars['harnessed-jobs']
         for folder in self.hj_folders:
-            os.command('ln -sf %(inst_dir)s/harnessed-jobs-%(hj_version)s/%(folder)s/* %(inst_dir)s/share' % locals(), shell=True)
+            subprocess.call('ln -sf %(inst_dir)s/harnessed-jobs-%(hj_version)s/%(folder)s/* %(inst_dir)s/share' % locals(), shell=True)
         self.write_setup()
     def test(self):
         hj_version = self.pars['harnessed-jobs']
-        command = 'source ./setup.sh; python harnessed-jobs-%(hj_version)s/tests/setup_test.py'
+        command = 'source ./setup.sh; python harnessed-jobs-%(hj_version)s/tests/setup_test.py' % locals()
         subprocess.call(command, shell=True)
 
 if __name__ == '__main__':
-    installer = Installer('../versions.txt')
+    installer = Installer('../versions.txt', site='SLAC')
     installer.run()
     installer.test()
