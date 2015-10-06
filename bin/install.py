@@ -27,12 +27,25 @@ class Installer(object):
     _github_org = 'https://github.com/lsst-camera-dh'
     def __init__(self, version_file, section='dev', inst_dir='.',
                  hj_folders=('BNL_T03',), site='BNL'):
-        self.version_file = version_file
-        self.pars = Parfile(version_file, section)
+        self.version_file = os.path.abspath(version_file)
+        self.pars = Parfile(self.version_file, section)
         self.inst_dir = os.path.abspath(inst_dir)
         self.hj_folders = hj_folders
         self.site = site
         self._stack_dir = None
+        self.curdir = os.path.abspath('.')
+
+    def modules_install(self):
+        url = 'http://sourceforge.net/projects/modules/files/Modules/modules-3.2.10/modules-3.2.10.tar.gz'
+        inst_dir = self.inst_dir
+        commands = ";".join(["curl -L -O %(url)s",
+                             "tar xzf modules-3.2.10.tar.gz",
+                             "cd modules-3.2.10",
+                             "./configure --prefix=%(inst_dir)s --with-tcl-lib=/usr/lib --with-tcl-inc=/usr/include",
+                             "make",
+                             "make install",
+                             "cd %(inst_dir)s"]) % locals()
+        subprocess.call(commands, shell=True)
 
     def github_download(self, package_name):
         version = self.pars[package_name]
@@ -62,7 +75,7 @@ class Installer(object):
         inst_dir = self.inst_dir
         hj_version = self.pars['harnessed-jobs']
         site = self.site
-        module_path = subprocess.check_output('ls -d %(inst_dir)s/lib/python*/site-packages' % locals(), shell=True)
+        module_path = subprocess.check_output('ls -d %(inst_dir)s/lib/python*/site-packages' % locals(), shell=True).strip()
         contents = """export STACK_DIR=%(stack_dir)s
 source ${STACK_DIR}/loadLSST.bash
 export INST_DIR=%(inst_dir)s
@@ -70,6 +83,7 @@ export EUPS_PATH=${INST_DIR}/eups:${EUPS_PATH}
 setup eotest
 setup mysqlpython
 export VIRTUAL_ENV=${INST_DIR}
+source ${INST_DIR}/Modules/3.2.10/init/bash
 export DATACATPATH=/afs/slac/u/gl/srs/datacat/dev/0.3/lib
 export HARNESSEDJOBSDIR=${INST_DIR}/harnessed-jobs-%(hj_version)s
 export PYTHONPATH=${DATACATPATH}:${HARNESSEDJOBSDIR}/python:%(module_path)s:${PYTHONPATH}
@@ -78,10 +92,12 @@ export SITENAME=%(site)s
 export LCATR_SCHEMA_PATH=${HARNESSEDJOBSDIR}/schemas:${LCATR_SCHEMA_PATH}
 PS1="[jh]$ "
 """ % locals()
-        output = open('setup.sh', 'w')
+        output = open(os.path.join(self.inst_dir, 'setup.sh'), 'w')
         output.write(contents)
         output.close()
     def run(self):
+        os.chdir(self.inst_dir)
+        self.modules_install()
         self.lcatr_install('lcatr-harness')
         self.lcatr_install('lcatr-schema')
         self.lcatr_install('lcatr-modulefiles')
@@ -98,12 +114,28 @@ PS1="[jh]$ "
         for folder in self.hj_folders:
             subprocess.call('ln -sf %(inst_dir)s/harnessed-jobs-%(hj_version)s/%(folder)s/* %(inst_dir)s/share' % locals(), shell=True)
         self.write_setup()
+        os.chdir(self.curdir)
     def test(self):
+        os.chdir(self.inst_dir)
         hj_version = self.pars['harnessed-jobs']
         command = 'source ./setup.sh; python harnessed-jobs-%(hj_version)s/tests/setup_test.py' % locals()
         subprocess.call(command, shell=True)
+        os.chdir(self.curdir)
 
 if __name__ == '__main__':
-    installer = Installer('../versions.txt', site='SLAC')
+    import argparse
+
+    parser = argparse.ArgumentParser(description="Job Harness Installer")
+    parser.add_argument('version_file', help='software version file')
+    parser.add_argument('--inst_dir', type=str, default='.',
+                        help='installation directory')
+    parser.add_argument('--site', type=str, default='BNL',
+                        help='Site (BNL, SLAC, etc.)')
+    parser.add_argument('--hj_folders', type=str, default="BNL_TO3")
+
+    args = parser.parse_args()
+
+    installer = Installer(args.version_file, inst_dir=args.inst_dir,
+                          hj_folders=args.hj_folders.split(), site=args.site)
     installer.run()
-    installer.test()
+#    installer.test()
