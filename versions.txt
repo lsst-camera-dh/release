@@ -8,7 +8,7 @@ lcatr-modulefiles = 0.3.1
 [jh_prod]
 eotest = 0.0.3
 harnessed-jobs = 0.1.4
-lcatr-harness = 0.7.0
+lcatr-harness = 0.8.4
 lcatr-schema = 0.4.3
 lcatr-modulefiles = 0.3.1
 
