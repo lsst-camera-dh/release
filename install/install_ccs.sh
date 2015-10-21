@@ -1,7 +1,7 @@
 #!/bin/bash
 set -e
 TESTSTAND_VERSION="1.0.5"
-ARCHON_VERSION="1.1"
+ARCHON_VERSION="1.2"
 LOCALDB_VERSION="1.3.4"
 CONSOLE_VERSION="1.6.4"
 BASE_URL="http://dev.lsstcorp.org:8081/nexus/service/local/artifact/maven/redirect?r=ccs-maven2-public&g=org.lsst"
