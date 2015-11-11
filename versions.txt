@@ -14,7 +14,7 @@ console = "1.6.4"
 [webapp_prod]
 eTraveler-dbSchema = 0.8.1
 eTraveler-frontEnd = 1.0.37
-eTraveler-travelerDefinition = 1.28.0
+eTraveler-travelerDefinition = 1.29.0
 dataPortal = 0.1.3
 
 [traveler_prod]
@@ -43,7 +43,7 @@ console = "1.6.4"
 [webapp_dev]
 eTraveler-dbSchema = 0.8.1
 eTraveler-frontEnd = 1.0.37
-eTraveler-travelerDefinition = 1.28.0
+eTraveler-travelerDefinition = 1.29.0
 dataPortal = 0.1.3
 
 [traveler_dev]
