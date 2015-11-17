@@ -15,7 +15,7 @@ console = "1.6.4"
 eTraveler-dbSchema = 0.8.1
 eTraveler-frontEnd = 1.0.37
 eTraveler-travelerDefinition = 1.29.0
-dataPortal = 0.1.3
+dataPortal = 0.1.4
 
 [traveler_prod]
 SR-MET-1 = v0
@@ -44,7 +44,7 @@ console = "1.6.4"
 eTraveler-dbSchema = 0.8.1
 eTraveler-frontEnd = 1.0.37
 eTraveler-travelerDefinition = 1.29.0
-dataPortal = 0.1.3
+dataPortal = 0.1.4
 
 [traveler_dev]
 SR-MET-1 = v8
