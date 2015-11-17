@@ -1,0 +1,14 @@
+[webapp]
+eTraveler-dbSchema = 0.8.1
+eTraveler-frontEnd = 1.0.37
+eTraveler-travelerDefinition = 1.29.0
+dataPortal = 0.1.4
+
+[traveler]
+SR-MET-1 = v0
+SR-MET-4 = v0
+SR-RCV-1 = v0
+SR-MET-2 = v0
+SR-RCV-2 = v0
+SR-EOT-1 = v0
+OGP-Scripts = 0.0.1
