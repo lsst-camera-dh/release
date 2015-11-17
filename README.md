@@ -1,3 +1,4 @@
+
 # release
 upper level package to handle releases of LSST camera data software
 Include the installation script and versioning history for the lsst-camera-dh packages.
@@ -12,9 +13,15 @@ There are both dev and prod lists of package tags.
 - DMstack installation
 
 ### Example Execution
-python install.py --inst_dir <path to JH installation> --site SLAC --hj_folders SLAC --prod ../versions.t
+python install.py --inst_dir <path to JH installation> --site SLAC --hj_folders SLAC --prod ../versions.txt
+
 inst_dir defaults to .  The install directory must already exist.
+
 site defaults to BNL [BNL, SLAC]
-hj_folders defaults to BNL_T03 [BNL_T03, SLAC]  determines what files are copied to the share directory under harnessed-jobs
+
+hj_folders defaults to BNL_T03 [BNL_T03, SLAC]  
+determines what files are copied to the share directory under harnessed-jobs
+
 prod is an optional parameter indicating installation of production release tags
+
 ccd_inst_dir is optional and points to the CCS installation directory
