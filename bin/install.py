@@ -44,7 +44,7 @@ class Installer(object):
                              "make",
                              "make install",
                              "cd %(inst_dir)s"]) % locals()
-        subprocess.call(commands, shell=True)
+        subprocess.call(commands, shell=True, executable="/bin/bash")
 
     def github_download(self, package_name):
         version = self.pars[package_name]
@@ -53,14 +53,14 @@ class Installer(object):
         commands = ["curl -L -O " + url,
                     "tar xzf %(version)s.tar.gz" % locals()]
         for command in commands:
-            subprocess.call(command, shell=True)
+            subprocess.call(command, shell=True, executable="/bin/bash")
 
     def lcatr_install(self, package_name):
         self.github_download(package_name)
         version = self.pars[package_name]
         inst_dir = self.inst_dir
         command = "cd %(package_name)s-%(version)s/; python setup.py install --prefix=%(inst_dir)s" % locals()
-        subprocess.call(command, shell=True)
+        subprocess.call(command, shell=True, executable="/bin/bash")
 
     @property
     def stack_dir(self):
@@ -106,17 +106,17 @@ PS1="[jh]$ "
         self.lcatr_install('lcatr-schema')
         self.lcatr_install('lcatr-modulefiles')
         inst_dir = self.inst_dir
-        subprocess.call('ln -sf %(inst_dir)s/share/modulefiles %(inst_dir)s/Modules' % locals(), shell=True)
-        subprocess.call('touch `ls -d %(inst_dir)s/lib/python*/site-packages/lcatr`/__init__.py' % locals(), shell=True)
+        subprocess.call('ln -sf %(inst_dir)s/share/modulefiles %(inst_dir)s/Modules' % locals(), shell=True, executable="/bin/bash")
+        subprocess.call('touch `ls -d %(inst_dir)s/lib/python*/site-packages/lcatr`/__init__.py' % locals(), shell=True, executable="/bin/bash")
         self.github_download('eotest')
         stack_dir = self.stack_dir
         eotest_version = self.pars['eotest']
         commands = """source %(stack_dir)s/loadLSST.bash; mkdir -p %(inst_dir)s/eups/ups_db; export EUPS_PATH=%(inst_dir)s/eups:${EUPS_PATH}; cd eotest-%(eotest_version)s/; eups declare eotest %(eotest_version)s -r . -c; setup eotest; setup mysqlpython; scons opt=3""" % locals()
-        subprocess.call(commands, shell=True)
+        subprocess.call(commands, shell=True, executable="/bin/bash")
         self.github_download('harnessed-jobs')
         hj_version = self.pars['harnessed-jobs']
         for folder in self.hj_folders:
-            subprocess.call('ln -sf %(inst_dir)s/harnessed-jobs-%(hj_version)s/%(folder)s/* %(inst_dir)s/share' % locals(), shell=True)
+            subprocess.call('ln -sf %(inst_dir)s/harnessed-jobs-%(hj_version)s/%(folder)s/* %(inst_dir)s/share' % locals(), shell=True, executable="/bin/bash")
         self.write_setup()
         os.chdir(self.curdir)
 
@@ -124,19 +124,19 @@ PS1="[jh]$ "
         os.chdir(self.inst_dir)
         hj_version = self.pars['harnessed-jobs']
         command = 'source ./setup.sh; python harnessed-jobs-%(hj_version)s/tests/setup_test.py' % locals()
-        subprocess.call(command, shell=True)
+        subprocess.call(command, shell=True, executable="/bin/bash")
         os.chdir(self.curdir)
 
     def _ccs_download(self, package_name, sub_system):
         base_url = "http://dev.lsstcorp.org:8081/nexus/service/local/artifact/maven/redirect?r=ccs-maven2-public&g=org.lsst"
         command = 'wget "%(base_url)s&a=%(package_name)s&v=%(sub_system)s&e=zip&c=dist" -O temp.zip' % locals()
-        subprocess.call(command, shell=True)
+        subprocess.call(command, shell=True, executable="/bin/bash")
         subdir = '-'.join((package_name, sub_system))
         if os.path.isdir(subdir):
-            subprocess.call('rm -r %(subdir)s' % locals(), shell=True)
-        subprocess.call('unzip -uo temp.zip', shell=True)
-        subprocess.call('rm temp.zip', shell=True)
-        subprocess.call('ln -sf %(subdir)s %(package_name)s' % locals(), shell=True)
+            subprocess.call('rm -r %(subdir)s' % locals(), shell=True, executable="/bin/bash")
+        subprocess.call('unzip -uo temp.zip', shell=True, executable="/bin/bash")
+        subprocess.call('rm temp.zip', shell=True, executable="/bin/bash")
+        subprocess.call('ln -sf %(subdir)s %(package_name)s' % locals(), shell=True, executable="/bin/bash")
 
     def ccs(self, inst_dir, prod=False, section='ccs_dev'):
         os.chdir(inst_dir)
@@ -171,7 +171,7 @@ ln -sf ../org-lsst-ccs-localdb-main/bin/trendingServer.sh trendingServer
 ln -sf ../org-lsst-ccs-subsystem-teststand-gui/bin/tsJas.sh tsGui
 """.split('\n')
         for command in commands:
-            subprocess.call(command, shell=True)
+            subprocess.call(command, shell=True, executable="/bin/bash")
         os.chdir(self.curdir)
 
 if __name__ == '__main__':
