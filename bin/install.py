@@ -145,10 +145,10 @@ PS1="[jh]$ "
             print "Installing production versions of CCS software"
         pars = Parfile(self.version_file, section)
         for package in ['org-lsst-ccs-subsystem-' + x for x in 
-                        'archon-main archon-buses archon-gui'.split()]:
+                        'archon-main archon-gui'.split()]:
             self._ccs_download(package, pars['archon'])
         for package in ['org-lsst-ccs-subsystem-' + x for x in 
-                        'teststand-main teststand-buses teststand-gui'.split()]:
+                        'teststand-main teststand-gui'.split()]:
             self._ccs_download(package, pars['teststand'])
         self._ccs_download('org-lsst-ccs-localdb-main', pars['localdb'])
         self._ccs_download('org-lsst-ccs-subsystem-console', pars['console'])
