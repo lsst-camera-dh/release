@@ -24,4 +24,4 @@ determines what files are copied to the share directory under harnessed-jobs
 
 prod is an optional parameter indicating installation of production release tags
 
-ccd_inst_dir is optional and points to the CCS installation directory
+ccs_inst_dir is optional and points to the CCS installation directory
