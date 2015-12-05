@@ -1,3 +1,3 @@
 [externals]
 python = /nfs/farm/g/lsst/u1/software/redhat6-x86_64-64bit-gcc44/anaconda/2.3.0/bin/python2.7
-datacat = 0.3
+datacat = /afs/slac/u/gl/srs/datacat/dev/0.4

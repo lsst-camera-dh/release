@@ -72,6 +72,14 @@ class Installer(object):
     def write_setup(self):
         stack_dir = self.stack_dir
         inst_dir = self.inst_dir
+        #
+        # Read in packageLists/Externals_versions.txt assuming it lives 
+        # relative to the location of this script in the release pacakge.
+        #
+        extfile = os.path.join(os.path.dirname(os.path.abspath(__file__)), 
+                               '..', 'packageLists', 'Externals_versions.txt')
+        datacatpath = os.path.join(Parfile(extfile, 'externals')['datacat'],
+                                   'lib')
         hj_version = self.pars['harnessed-jobs']
         site = self.site
         module_path = subprocess.check_output('ls -d %(inst_dir)s/lib/python*/site-packages' % locals(), shell=True).strip()
@@ -83,7 +91,7 @@ setup eotest
 setup mysqlpython
 export VIRTUAL_ENV=${INST_DIR}
 source ${INST_DIR}/Modules/3.2.10/init/bash
-export DATACATPATH=/afs/slac/u/gl/srs/datacat/dev/0.3/lib
+export DATACATPATH=%(datacatpath)s/lib
 export HARNESSEDJOBSDIR=${INST_DIR}/harnessed-jobs-%(hj_version)s
 export PYTHONPATH=${DATACATPATH}:${HARNESSEDJOBSDIR}/python:%(module_path)s:${PYTHONPATH}
 export PATH=${INST_DIR}/bin:${PATH}
