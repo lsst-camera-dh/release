@@ -63,9 +63,9 @@ class Installer(object):
         subprocess.call(command, shell=True, executable="/bin/bash")
 
     @property
-    def stack_dir(self):
+    def stack_dir(self, section='dmstack'):
         if self._stack_dir is None:
-            pars = Parfile(self.version_file, self.site)
+            pars = Parfile(self.version_file, section)
             self._stack_dir = pars['stack_dir']
         return self._stack_dir
 
@@ -103,11 +103,8 @@ PS1="[jh]$ "
         output.write(contents)
         output.close()
 
-    def jh(self, prod=False, section='jh_dev'):
+    def jh(self, section='jh'):
         os.chdir(self.inst_dir)
-        if prod:
-            section = 'jh_prod'
-            print "Installing production versions of Job Harness software"
         self.pars = Parfile(self.version_file, section)
         self.modules_install()
         self.lcatr_install('lcatr-harness')
@@ -146,11 +143,8 @@ PS1="[jh]$ "
         subprocess.call('rm temp.zip', shell=True, executable="/bin/bash")
         subprocess.call('ln -sf %(subdir)s %(package_name)s' % locals(), shell=True, executable="/bin/bash")
 
-    def ccs(self, inst_dir, prod=False, section='ccs_dev'):
+    def ccs(self, inst_dir, section='ccs'):
         os.chdir(inst_dir)
-        if prod:
-            section = 'ccs_prod'
-            print "Installing production versions of CCS software"
         pars = Parfile(self.version_file, section)
         for package in ['org-lsst-ccs-subsystem-' + x for x in 
                         'archon-main archon-gui'.split()]:
@@ -193,15 +187,13 @@ if __name__ == '__main__':
                         help='Site (BNL, SLAC, etc.)')
     parser.add_argument('--hj_folders', type=str, default="BNL_TO3")
     parser.add_argument('--ccs_inst_dir', type=str, default=None)
-    parser.add_argument('--prod', action='store_true', default=False,
-                        help='Install production versions')
 
     args = parser.parse_args()
     
     installer = Installer(args.version_file, inst_dir=args.inst_dir,
                           hj_folders=args.hj_folders.split(), site=args.site)
-    installer.jh(prod=args.prod)
+    installer.jh()
     installer.jh_test()
 
     if args.ccs_inst_dir is not None:
-        installer.ccs(args.ccs_inst_dir, prod=args.prod)
+        installer.ccs(args.ccs_inst_dir)
