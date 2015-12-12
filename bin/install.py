@@ -78,11 +78,18 @@ class Installer(object):
         #
         extfile = os.path.join(os.path.dirname(os.path.abspath(__file__)), 
                                '..', 'packageLists', 'Externals_versions.txt')
-        datacatpath = os.path.join(Parfile(extfile, 'externals')['datacat'],
-                                   'lib')
         hj_version = self.pars['harnessed-jobs']
         site = self.site
         module_path = subprocess.check_output('ls -d %(inst_dir)s/lib/python*/site-packages' % locals(), shell=True).strip()
+        try:
+            datacat_pars = Parfile(self.version_file, 'datacat')
+            datacatdir = os.path.join(datacat_pars['datacatdir'])
+            datacat_config = datacat_pars['datacat_config']
+            python_configs = """export DATACATDIR=%(datacatdir)s/lib
+export DATACAT_CONFIG=%(datacat_config)s
+export PYTHONPATH=${DATACATDIR}:${HARNESSEDJOBSDIR}/python:%(module_path)s:${PYTHONPATH}""" % locals()
+        except ConfigParser.NoSectionError:
+            python_configs = """export PYTHONPATH=${HARNESSEDJOBSDIR}/python:%(module_path)s:${PYTHONPATH}""" % locals()
         contents = """export STACK_DIR=%(stack_dir)s
 source ${STACK_DIR}/loadLSST.bash
 export INST_DIR=%(inst_dir)s
@@ -91,9 +98,8 @@ setup eotest
 setup mysqlpython
 export VIRTUAL_ENV=${INST_DIR}
 source ${INST_DIR}/Modules/3.2.10/init/bash
-export DATACATPATH=%(datacatpath)s/lib
 export HARNESSEDJOBSDIR=${INST_DIR}/harnessed-jobs-%(hj_version)s
-export PYTHONPATH=${DATACATPATH}:${HARNESSEDJOBSDIR}/python:%(module_path)s:${PYTHONPATH}
+%(python_configs)s
 export PATH=${INST_DIR}/bin:${PATH}
 export SITENAME=%(site)s
 export LCATR_SCHEMA_PATH=${HARNESSEDJOBSDIR}/schemas:${LCATR_SCHEMA_PATH}
