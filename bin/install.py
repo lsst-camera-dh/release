@@ -46,8 +46,9 @@ class Installer(object):
                              "cd %(inst_dir)s"]) % locals()
         subprocess.call(commands, shell=True, executable="/bin/bash")
 
-    def github_download(self, package_name):
-        version = self.pars[package_name]
+    def github_download(self, package_name, version=None):
+        if version is None:
+            version = self.pars[package_name]
         url = '/'.join((self._github_org, package_name, 'archive',
                         version + '.tar.gz'))
         commands = ["curl -L -O " + url,
@@ -69,7 +70,7 @@ class Installer(object):
             self._stack_dir = pars['stack_dir']
         return self._stack_dir
 
-    def write_setup(self):
+    def write_setup(self, package_dirs=[]):
         stack_dir = self.stack_dir
         inst_dir = self.inst_dir
         #
@@ -81,15 +82,24 @@ class Installer(object):
         hj_version = self.pars['harnessed-jobs']
         site = self.site
         module_path = subprocess.check_output('ls -d %(inst_dir)s/lib/python*/site-packages' % locals(), shell=True).strip()
+        python_dirs = [os.path.join(x, 'python') for x in package_dirs]
+        python_dirs.extend(['${DATACATDIR}', 
+                            '${HARNESSEDJOBSDIR}/python',
+                            module_path,
+                            '${PYTHONPATH}'])
+        python_path = ":".join(python_dirs)
+        bin_dirs = [os.path.join(x, 'bin') for x in package_dirs]
+        bin_dirs.extend(['${INST_DIR}/bin', '${PATH}'])
+        bin_path = ":".join(bin_dirs)
         try:
             datacat_pars = Parfile(self.version_file, 'datacat')
             datacatdir = os.path.join(datacat_pars['datacatdir'])
             datacat_config = datacat_pars['datacat_config']
             python_configs = """export DATACATDIR=%(datacatdir)s/lib
 export DATACAT_CONFIG=%(datacat_config)s
-export PYTHONPATH=${DATACATDIR}:${HARNESSEDJOBSDIR}/python:%(module_path)s:${PYTHONPATH}""" % locals()
+export PYTHONPATH=%(python_path)s""" % locals()
         except ConfigParser.NoSectionError:
-            python_configs = """export PYTHONPATH=${HARNESSEDJOBSDIR}/python:%(module_path)s:${PYTHONPATH}""" % locals()
+            python_configs = "export PYTHONPATH=%(python_path)s" % locals()
         contents = """export STACK_DIR=%(stack_dir)s
 source ${STACK_DIR}/loadLSST.bash
 export INST_DIR=%(inst_dir)s
@@ -100,7 +110,7 @@ export VIRTUAL_ENV=${INST_DIR}
 source ${INST_DIR}/Modules/3.2.10/init/bash
 export HARNESSEDJOBSDIR=${INST_DIR}/harnessed-jobs-%(hj_version)s
 %(python_configs)s
-export PATH=${INST_DIR}/bin:${PATH}
+export PATH=%(bin_path)s
 export SITENAME=%(site)s
 export LCATR_SCHEMA_PATH=${HARNESSEDJOBSDIR}/schemas:${LCATR_SCHEMA_PATH}
 PS1="[jh]$ "
@@ -128,8 +138,24 @@ PS1="[jh]$ "
         hj_version = self.pars['harnessed-jobs']
         for folder in self.hj_folders:
             subprocess.call('ln -sf %(inst_dir)s/harnessed-jobs-%(hj_version)s/%(folder)s/* %(inst_dir)s/share' % locals(), shell=True, executable="/bin/bash")
-        self.write_setup()
+        try:
+            package_dirs = self.hj_package_installer()
+        except ConfigParser.NoSectionError:
+            package_dirs = []
+        self.write_setup(package_dirs)
         os.chdir(self.curdir)
+
+    def hj_package_installer(self):
+        inst_dir = self.inst_dir
+        pars = Parfile(self.version_file, 'hj_packages')
+        package_dirs = []
+        for package, version in pars.items():
+            self.github_download(package, version=version)
+            package_dir = "%(package)s-%(version)s" % locals()
+            command = 'ln -sf %(inst_dir)s/%(package_dir)s/harnessed_jobs/* %(inst_dir)s/share' % locals()
+            subprocess.call(command, shell=True, executable="/bin/bash")
+            package_dirs.append(os.path.join(inst_dir, package_dir))
+        return package_dirs
 
     def jh_test(self):
         os.chdir(self.inst_dir)
