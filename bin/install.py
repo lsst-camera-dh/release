@@ -41,7 +41,7 @@ class Installer(object):
         commands = ";".join(["curl -L -O %(url)s",
                              "tar xzf modules-3.2.10.tar.gz",
                              "cd modules-3.2.10",
-                             "./configure --prefix=%(inst_dir)s --with-tcl-lib=/usr/lib --with-tcl-inc=/usr/include",
+                             "./configure --prefix=%(inst_dir)s",
                              "make",
                              "make install",
                              "cd %(inst_dir)s"]) % locals()
