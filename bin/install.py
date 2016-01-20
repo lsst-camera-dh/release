@@ -145,8 +145,10 @@ PS1="[jh]$ "
         for package, version in pars.items():
             self.github_download(package, version)
             package_dir = "%(package)s-%(version)s" % locals()
-            command = 'ln -sf %(inst_dir)s/%(package_dir)s/harnessed_jobs/* %(inst_dir)s/share' % locals()
-            subprocess.call(command, shell=True, executable="/bin/bash")
+            hj_dir = "%(inst_dir)s/%(package_dir)s/harnessed_jobs" % locals()
+            if os.path.isdir(hj_dir):
+                command = 'ln -sf %(hj_dir)s/* %(inst_dir)s/share' % locals()
+                subprocess.call(command, shell=True, executable="/bin/bash")
             self.package_dirs.append(os.path.join(inst_dir, package_dir))
 
     def jh_test(self):
