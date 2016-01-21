@@ -10,5 +10,5 @@ SR-MET-4 = v2
 SR-RCV-1 = v0
 SR-MET-2 = v0
 SR-RCV-2 = v1
-SR-EOT-1 = v0
+SR-EOT-1 = v1
 OGP-Scripts = 0.0.1
