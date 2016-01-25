@@ -20,4 +20,4 @@ stack_dir = /nfs/farm/g/lsst/u1/software/redhat6-x86_64-64bit-gcc44/DMstack/Wint
 
 [datacat]
 datacatdir = /afs/slac/u/gl/srs/datacat/dev/0.4
-datacat_config = /nfs/farm/g/lsst/u1/software/config.cfg
+datacat_config = /nfs/farm/g/lsst/u1/software/datacat/config.cfg
