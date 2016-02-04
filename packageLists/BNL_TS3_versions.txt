@@ -5,9 +5,6 @@ lcatr-harness = 0.8.3
 lcatr-schema = 0.4.3
 lcatr-modulefiles = 0.3.1
 
-[hj_packages]
-metrology-data-analysis = 0.0.3
-
 [ccs]
 teststand = "1.1.5"
 archon = "2.0.1"
