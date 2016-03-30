@@ -1,15 +1,15 @@
 [jh]
-eotest = 0.0.9
-harnessed-jobs = 0.3.4
-lcatr-harness = 0.8.3
-lcatr-schema = 0.4.3
+eotest = 0.0.10
+harnessed-jobs = 0.3.8
+lcatr-harness = 0.8.5
+lcatr-schema = 0.5.0
 lcatr-modulefiles = 0.3.1
 
 [ccs]
-teststand = "1.1.5"
-archon = "2.0.1"
-localdb = "1.5.4"
-console = "2.1.1"
+teststand = "1.1.10"
+archon = "2.0.4"
+localdb = "2.0.1"
+console = "3.0.1"
 
 [dmstack]
 stack_dir = /opt/lsst/redhat6-x86_64-64bit-gcc44/DMstack/Winter2015
