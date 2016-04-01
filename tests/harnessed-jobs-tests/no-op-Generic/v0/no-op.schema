@@ -1,0 +1,6 @@
+# -*- python -*-
+{
+    'schema_name' : 'no-op',
+    'schema_version' : 0,
+    'stat' : int,
+}
