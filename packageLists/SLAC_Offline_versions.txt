@@ -1,13 +1,13 @@
 [jh]
-eotest = 0.0.9
-harnessed-jobs = 0.3.3
+eotest = 0.0.10
+harnessed-jobs = 0.3.8
 lcatr-harness = 0.8.5
-lcatr-schema = 0.4.3
+lcatr-schema = 0.5.2
 lcatr-modulefiles = 0.3.1
 
 [hj_packages]
-metrology-data-analysis = 0.0.2
-offline-jobs = 0.0.3
+metrology-data-analysis = 0.0.4
+offline-jobs = 0.0.5
 
 [ccs]
 teststand = "1.0.5"
