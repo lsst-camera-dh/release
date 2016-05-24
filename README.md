@@ -1,27 +1,41 @@
-
 # release
-upper level package to handle releases of LSST camera data software
-Include the installation script and versioning history for the lsst-camera-dh packages.
+This is a package to manage the installation of LSST Camera Data Handling software.
 
-## versions.txt
-Identifies repository tags for all packages in lsst-camera-dh under CCB control which must be installed.
-There are both dev and prod lists of package tags.
+## `packageLists/*_versions.txt`
+These files identify the repository tags for the packages in `lsst-camera-dh` under CCB control which are to be installed.  The different `*_versions.txt` files apply in the corresponding context, e.g., `SLAC_Offline_versions.txt` contains the packages (and their versions) that are to be installed at SLAC for the offline analyses run under [eTraveler](http://lsst-camera.slac.stanford.edu/eTraveler/exp/LSST-CAMERA/welcome.jsp).
 
-## How to use the install.py script
+## Using the `install.py` script
 ### Prerequisites
 - Anaconda Python installation
-- DMstack installation
+- LSST Stack installation
+- `datacat` module (at SLAC)
 
-### Example Execution
-python install.py --inst_dir <path to JH installation> --site SLAC --hj_folders SLAC --prod ../versions.txt
+### Example installation sequence:
+```
+$ git clone git@github.com:lsst-camera-dh/release.git
+$ release/bin/install --help
+usage: install.py [-h] [--inst_dir INST_DIR] [--site SITE]
+                  [--hj_folders HJ_FOLDERS] [--ccs_inst_dir CCS_INST_DIR]
+                  version_file
 
-inst_dir defaults to .  The install directory must already exist.
+Job Harness Installer
 
-site defaults to BNL [BNL, SLAC]
+positional arguments:
+  version_file          software version file
 
-hj_folders defaults to BNL_T03 [BNL_T03, SLAC]  
-determines what files are copied to the share directory under harnessed-jobs
+optional arguments:
+  -h, --help            show this help message and exit
+  --inst_dir INST_DIR   installation directory
+  --site SITE           Site (SLAC, BNL, etc.)
+  --hj_folders HJ_FOLDERS
+  --ccs_inst_dir CCS_INST_DIR
+$ mkdir <install directory>
+$ release/bin/install.py --inst_dir <install directory> --site SLAC release/packageLists/SLAC_Offline_versions.txt
+```
+`inst_dir` defaults to `.`.
 
-prod is an optional parameter indicating installation of production release tags
+`site` defaults to `SLAC [BNL, SLAC]`
 
-ccs_inst_dir is optional and points to the CCS installation directory
+`hj_folders` defaults to `BNL_T03` and determines which files in the `harnessed-jobs` repository are copied to the `share` directory.
+
+`ccs_inst_dir` points to the CCS installation directory where it will install the CCS code.  By default, the CCS code will not be installed.
