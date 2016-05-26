@@ -2,7 +2,7 @@
 eTraveler-dbSchema = 0.10.0
 eTraveler-frontEnd = 1.2.10
 eTraveler-travelerDefinition = 1.33.1
-dataPortal = 0.1.8
+dataPortal = 0.1.9
 
 [traveler]
 SR-MET-01 = v0
