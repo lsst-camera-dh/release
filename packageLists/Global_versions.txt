@@ -1,5 +1,5 @@
 [webapp]
-eTraveler-dbSchema = 0.9.0
+eTraveler-dbSchema = 0.10.0
 eTraveler-frontEnd = 1.2.10
 eTraveler-travelerDefinition = 1.32.2
 dataPortal = 0.1.8
