@@ -6,15 +6,19 @@ dataPortal = 0.1.9
 
 [traveler]
 SR-MET-01 = v0
-SR-MET-02 = v1
-SR-MET-04 = v2
+SR-MET-2 = v1
+SR-MET-4 = v2
 SR-MET-05 = v1
-SR-MET-06 = v1
+SR-MET-6 = v1
 
 SR-RCV-01 = v1
-SR-RCV-02 = v1
+SR-RCV-2 = v1
 
-SR-EOT-01 = v1
+SR-EOT-1 = v1
 SR-EOT-02 = v1
+
+CR-WFS-RCV-01 v1
+CR-WFS-EOT-01 v1
+CR-WFS-MET-01 v1
 
 OGP-Scripts = 0.0.1
