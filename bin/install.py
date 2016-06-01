@@ -7,6 +7,7 @@ class Parfile(dict):
     def __init__(self, infile, section):
         super(Parfile, self).__init__()
         parser = ConfigParser.ConfigParser()
+        parser.optionxform = str
         parser.read(infile)
         for key, value in parser.items(section):
             self[key] = self._cast(value)
