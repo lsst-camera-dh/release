@@ -1,0 +1,6 @@
+[ccs]
+teststand = "1.1.11"
+archon = "2.0.4"
+localdb = "2.0.1"
+console = "3.0.1"
+

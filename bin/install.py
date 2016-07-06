@@ -29,7 +29,8 @@ class Installer(object):
     def __init__(self, version_file, inst_dir='.',
                  hj_folders=('BNL_T03',), site='BNL'):
         self.version_file = os.path.abspath(version_file)
-        self.inst_dir = os.path.abspath(inst_dir)
+        if inst_dir is not None  :
+            self.inst_dir = os.path.abspath(inst_dir)
         self.hj_folders = hj_folders
         self.site = site
         self._stack_dir = None
@@ -67,8 +68,11 @@ class Installer(object):
     @property
     def stack_dir(self):
         if self._stack_dir is None:
-            pars = Parfile(self.version_file, 'dmstack')
-            self._stack_dir = pars['stack_dir']
+            try:
+                pars = Parfile(self.version_file, 'dmstack')
+                self._stack_dir = pars['stack_dir']
+            except ConfigParser.NoSectionError:            
+                pass
         return self._stack_dir
 
     def write_setup(self):
@@ -115,8 +119,11 @@ PS1="[jh]$ "
         output.close()
 
     def jh(self, section='jh'):
+        try:
+            self.pars = Parfile(self.version_file, section)
+        except ConfigParser.NoSectionError:            
+            return
         os.chdir(self.inst_dir)
-        self.pars = Parfile(self.version_file, section)
         self.modules_install()
         self.lcatr_install('lcatr-harness')
         self.lcatr_install('lcatr-schema')
@@ -172,7 +179,10 @@ PS1="[jh]$ "
 
     def ccs(self, inst_dir, section='ccs'):
         os.chdir(inst_dir)
-        pars = Parfile(self.version_file, section)
+        try:
+            pars = Parfile(self.version_file, section)
+        except ConfigParser.NoSectionError:            
+            return
         for package in ['org-lsst-ccs-subsystem-' + x for x in 
                         'archon-main archon-gui'.split()]:
             self._ccs_download(package, pars['archon'])
@@ -208,7 +218,7 @@ if __name__ == '__main__':
 
     parser = argparse.ArgumentParser(description="Job Harness Installer")
     parser.add_argument('version_file', help='software version file')
-    parser.add_argument('--inst_dir', type=str, default='.',
+    parser.add_argument('--inst_dir', type=str, default=None,
                         help='installation directory')
     parser.add_argument('--site', type=str, default='SLAC',
                         help='Site (SLAC, BNL, etc.)')
@@ -219,8 +229,10 @@ if __name__ == '__main__':
     
     installer = Installer(args.version_file, inst_dir=args.inst_dir,
                           hj_folders=args.hj_folders.split(), site=args.site)
-    installer.jh()
-    installer.jh_test()
+
+    if args.inst_dir is not None:
+        installer.jh()
+        installer.jh_test()
 
     if args.ccs_inst_dir is not None:
         installer.ccs(args.ccs_inst_dir)
