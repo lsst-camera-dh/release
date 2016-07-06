@@ -29,7 +29,7 @@ class Installer(object):
     def __init__(self, version_file, inst_dir='.',
                  hj_folders=('BNL_T03',), site='BNL'):
         self.version_file = os.path.abspath(version_file)
-        if inst_dir is not None  :
+        if inst_dir is not None:
             self.inst_dir = os.path.abspath(inst_dir)
         self.hj_folders = hj_folders
         self.site = site
