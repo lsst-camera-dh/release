@@ -1,14 +1,14 @@
 [jh]
-eotest = 0.0.10
-harnessed-jobs = 0.3.11
+eotest = 0.0.14
+harnessed-jobs = 0.3.33
 lcatr-harness = 0.8.6
 lcatr-schema = 0.5.2
 lcatr-modulefiles = 0.3.1
-config_files = 0.0.3
+config_files = 0.0.7
 
 [ccs]
-teststand = "1.1.11"
-archon = "2.0.4"
+teststand = "1.1.13"
+archon = "2.0.5"
 localdb = "2.0.1"
 console = "3.0.1"
 
