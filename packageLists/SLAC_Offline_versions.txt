@@ -1,12 +1,12 @@
 [jh]
 eotest = 0.0.14
-harnessed-jobs = 0.3.12
+harnessed-jobs = 0.3.33-slac
 lcatr-harness = 0.9.0
 lcatr-schema = 0.5.2
 lcatr-modulefiles = 0.3.1
 
 [hj_packages]
-metrology-data-analysis = 0.0.7
+metrology-data-analysis = 0.0.8
 offline-jobs = 0.0.13
 
 [dmstack]
