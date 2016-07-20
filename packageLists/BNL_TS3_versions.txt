@@ -7,10 +7,12 @@ lcatr-modulefiles = 0.3.1
 config_files = 0.0.7
 
 [ccs]
-teststand = "1.1.13"
-archon = "2.0.5"
-localdb = "2.0.1"
-console = "3.0.1"
+org-lsst-ccs-subsystem-teststand-main = 1.1.13
+org-lsst-ccs-subsystem-teststand-gui = 1.1.13
+org-lsst-ccs-subsystem-archon-main = 2.0.5
+org-lsst-ccs-subsystem-archon-gui = 2.0.5
+org-lsst-ccs-localdb-main = 2.0.1
+org-lsst-ccs-subsystem-console = 3.0.1
 
 [dmstack]
 stack_dir = /opt/lsst/redhat6-x86_64-64bit-gcc44/DMstack/Winter2015
