@@ -1,8 +1,0 @@
-[ccs]
-org-lsst-ccs-subsystem-teststand-main = 1.1.11
-org-lsst-ccs-subsystem-teststand-gui = 1.1.11
-org-lsst-ccs-subsystem-archon-main = 2.0.4
-org-lsst-ccs-subsystem-archon-gui = 2.0.4
-org-lsst-ccs-localdb-main = 2.0.1
-org-lsst-ccs-subsystem-console = 3.0.1
-
