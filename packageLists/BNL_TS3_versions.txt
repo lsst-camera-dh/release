@@ -8,7 +8,7 @@ config_files = 0.0.7
 
 [ccs]
 teststand = "1.1.14"
-archon = "2.0.6"
+archon = "2.0.7"
 localdb = "2.0.1"
 console = "3.0.1"
 
