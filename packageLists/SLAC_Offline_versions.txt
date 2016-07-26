@@ -10,7 +10,7 @@ metrology-data-analysis = 0.0.8
 offline-jobs = 0.0.13
 
 [dmstack]
-stack_dir = /nfs/farm/g/lsst/u1/software/redhat6-x86_64-64bit-gcc44/DMstack/Winter2015
+stack_dir = /nfs/farm/g/lsst/u1/software/redhat6-x86_64-64bit-gcc44/DMstack/v12_0
 
 [datacat]
 datacatdir = /afs/slac/u/gl/srs/datacat/dev/0.4
