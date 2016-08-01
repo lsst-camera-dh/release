@@ -166,16 +166,41 @@ PS1="[jh]$ "
         subprocess.call(command, shell=True, executable="/bin/bash")
         os.chdir(self.curdir)
 
-    def _ccs_download(self, package_name, sub_system):
-        base_url = "http://dev.lsstcorp.org:8081/nexus/service/local/artifact/maven/redirect?r=ccs-maven2-public&g=org.lsst"
-        command = 'wget "%(base_url)s&a=%(package_name)s&v=%(sub_system)s&e=zip&c=dist" -O temp.zip' % locals()
-        subprocess.call(command, shell=True, executable="/bin/bash")
-        subdir = '-'.join((package_name, sub_system))
-        if os.path.isdir(subdir):
-            subprocess.call('rm -r %(subdir)s' % locals(), shell=True, executable="/bin/bash")
-        subprocess.call('unzip -uo temp.zip', shell=True, executable="/bin/bash")
-        subprocess.call('rm temp.zip', shell=True, executable="/bin/bash")
-        subprocess.call('ln -sf %(subdir)s %(package_name)s' % locals(), shell=True, executable="/bin/bash")
+    def _ccs_download(self, package_name, package_version):
+
+        subdir = '-'.join((package_name, package_version))
+        isReleasedVersion = 'SNAPSHOT' not in package_version;
+        
+        if isReleasedVersion and os.path.exists(subdir):
+            print("Skipping download of released package {} since it already exists.".format(subdir));
+        else:
+            #Download the CCS package only when necessary:
+            # - if it is a SNAPSHOT version
+            # - if it is a released version and it does not exist in the ccs install directory
+            base_url = "http://dev.lsstcorp.org:8081/nexus/service/local/artifact/maven/redirect?r=ccs-maven2-public&g=org.lsst"
+            command = 'wget "%(base_url)s&a=%(package_name)s&v=%(package_version)s&e=zip&c=dist" -O temp.zip' % locals()
+            subprocess.call(command, shell=True, executable="/bin/bash")
+            if os.path.isdir(subdir):
+                subprocess.call('rm -r %(subdir)s' % locals(), shell=True, executable="/bin/bash")
+            subprocess.call('unzip -uoqq temp.zip', shell=True, executable="/bin/bash")
+            subprocess.call('rm temp.zip', shell=True, executable="/bin/bash")
+            
+        createSymlink = False
+        if not os.path.exists(package_name):
+            #If the symlink does not exist, create it
+            print("Creating symlink {} ---> {}".format(package_name,subdir))
+            createSymlink = True;
+        else:
+            if os.path.basename(os.path.realpath(package_name)) != subdir:
+                #If the symlink exists, but it points to a different version of
+                #the package, then remove it and then re-create it.
+                print("Updating symlink {} ---> {}".format(package_name,subdir))
+                createSymlink = True;
+                subprocess.call('rm %(package_name)s' % locals(), shell=True, executable="/bin/bash")
+
+        if createSymlink:
+            subprocess.call('ln -sf %(subdir)s %(package_name)s' % locals(), shell=True, executable="/bin/bash")
+                
 
     def ccs(self, inst_dir, section='ccs'):
         os.chdir(inst_dir)
@@ -183,15 +208,10 @@ PS1="[jh]$ "
             pars = Parfile(self.version_file, section)
         except ConfigParser.NoSectionError:            
             return
-        for package in ['org-lsst-ccs-subsystem-' + x for x in 
-                        'archon-main archon-gui'.split()]:
-            self._ccs_download(package, pars['archon'])
-        for package in ['org-lsst-ccs-subsystem-' + x for x in 
-                        'teststand-main teststand-gui'.split()]:
-            self._ccs_download(package, pars['teststand'])
-        self._ccs_download('org-lsst-ccs-localdb-main', pars['localdb'])
-        self._ccs_download('org-lsst-ccs-subsystem-console', pars['console'])
-
+        
+        for x in pars :
+            self._ccs_download(x, pars[x])
+        
         try:
             os.mkdir('bin')
         except OSError:
