@@ -1,5 +1,5 @@
 [jh]
-eotest = 0.0.14
+eotest = 0.0.15
 harnessed-jobs = 0.3.33-slac
 lcatr-harness = 0.9.0
 lcatr-schema = 0.5.2
