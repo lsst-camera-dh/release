@@ -2,6 +2,7 @@
 import os
 import subprocess
 import ConfigParser
+import inspect
 
 class Parfile(dict):
     def __init__(self, infile, section):
@@ -185,67 +186,122 @@ PS1="[jh]$ "
             subprocess.call('unzip -uoqq temp.zip', shell=True, executable="/bin/bash")
             subprocess.call('rm temp.zip', shell=True, executable="/bin/bash")
             
+        self._ccs_symlink(package_name, subdir);
+
+    def _ccs_symlink(self, symlinkName, symlinkTarget):
         createSymlink = False
-        if not os.path.exists(package_name):
+        if not os.path.exists(symlinkName):
             #If the symlink does not exist, create it
-            print("Creating symlink {} ---> {}".format(package_name,subdir))
+            print("Creating symlink {} ---> {}".format(symlinkName,symlinkTarget))
             createSymlink = True;
         else:
-            if os.path.basename(os.path.realpath(package_name)) != subdir:
+            if os.path.realpath(symlinkName) != os.path.realpath(symlinkTarget):
                 #If the symlink exists, but it points to a different version of
                 #the package, then remove it and then re-create it.
-                print("Updating symlink {} ---> {}".format(package_name,subdir))
+                print("Updating symlink {} ---> {}".format(symlinkName,symlinkTarget))
                 createSymlink = True;
-                subprocess.call('rm %(package_name)s' % locals(), shell=True, executable="/bin/bash")
+                subprocess.call('rm %(symlinkName)s' % locals(), shell=True, executable="/bin/bash")
 
         if createSymlink:
-            subprocess.call('ln -sf %(subdir)s %(package_name)s' % locals(), shell=True, executable="/bin/bash")
-                
+            subprocess.call('ln -sf %(symlinkTarget)s %(symlinkName)s' % locals(), shell=True, executable="/bin/bash")
+        
 
-    def ccs(self, inst_dir, section='ccs'):
+    def ccs(self, args, section='ccs'):
+        
+        #The CCS installation directory
+        inst_dir = args.ccs_inst_dir;
+        #CCS Installation directory full path from where the script is being run
+        inst_dir_full_path = os.path.realpath(args.ccs_inst_dir);
+        
+        #Check if the CCS installation directory exists and create it if it does not exist.
+        if not os.path.exists(inst_dir_full_path):
+            print("Creating CCS install directory {}.".format(inst_dir_full_path))
+            os.makedirs(inst_dir_full_path);
+
+        #Change directory to the installation directory
         os.chdir(inst_dir)
+            
+
+        #These actions are taken only in a development environment:
+        # - create a .installArgs file
+        # - create a symlink for the update script
+        # - create a symlink to the package list file
+        if args.dev:
+            #Create a list with the arguments required to build the CCS installation directory
+            ccsArguments = [];
+            ccsArguments.append("--ccs_inst_dir");
+            ccsArguments.append(inst_dir_full_path);
+            ccsArguments.append("--site");
+            ccsArguments.append(args.site);
+            ccsArguments.append("--dev");
+            ccsArguments.append(self.version_file);
+        
+
+            installFileName = ".installArgs";
+            #If the install file does not exist, create it.
+            if ( not os.path.exists(installFileName) ):
+                installFile = open(installFileName, 'w')
+                for arg in ccsArguments:
+                    installFile.write(arg+"\n");
+            #Create a symbolic link to the install script used to create this installation directory
+            self._ccs_symlink("update.py",inspect.stack()[0][1]);        
+            #Create a symbolic link to the package list file used to create this installation directory
+            self._ccs_symlink("packageList.txt",self.version_file);
+        
         try:
             pars = Parfile(self.version_file, section)
         except ConfigParser.NoSectionError:            
             return
         
-        for x in pars :
-            self._ccs_download(x, pars[x])
         
+        #Loop over the content of the [ccs] section to find either        
+        #  - packages to be downloaded
+        #  - symlinks to be created
+        #Symlinks are created after the packages have been downloaded
+        symlinkMap = {};
+        symlinkToken = "symlink."
+        for x in pars :
+            if not x.startswith(symlinkToken):
+                self._ccs_download(x, pars[x])
+            else:
+                symlinkMap.update({x.replace(symlinkToken,''):pars[x]})
+
         try:
             os.mkdir('bin')
         except OSError:
             # bin directory already exists(?)
             pass
         os.chdir('bin')
-        commands = """ln -sf ../org-lsst-ccs-subsystem-teststand-main/bin/CCSbootstrap.sh ts
-ln -sf ../org-lsst-ccs-subsystem-teststand-main/bin/CCSbootstrap.sh tsSim
-ln -sf ../org-lsst-ccs-subsystem-archon-main/bin/CCSbootstrap.sh archon
-ln -sf ../org-lsst-ccs-subsystem-archon-main/bin/CCSbootstrap.sh archonSim
-ln -sf ../org-lsst-ccs-subsystem-teststand-gui/bin/CCSbootstrap.sh CCS-Console
-ln -sf ../org-lsst-ccs-subsystem-teststand-main/bin/CCSbootstrap.sh JythonConsole
-ln -sf ../org-lsst-ccs-subsystem-teststand-main/bin/CCSbootstrap.sh ShellCommandConsole
-ln -sf ../org-lsst-ccs-localdb-main/bin/trendingPersister.sh trendingPersister.sh
-ln -sf ../org-lsst-ccs-localdb-main/bin/trendingServer.sh trendingServer
-ln -sf ../org-lsst-ccs-subsystem-teststand-gui/bin/tsJas.sh tsGui
-""".split('\n')
-        for command in commands:
-            subprocess.call(command, shell=True, executable="/bin/bash")
+        
+        
+        #Now create the symlinks
+        for symlinkName in symlinkMap:
+            self._ccs_symlink(symlinkName,"../{}/bin/CCSbootstrap.sh".format(symlinkMap[symlinkName]))
+        
         os.chdir(self.curdir)
 
 if __name__ == '__main__':
     import argparse
 
-    parser = argparse.ArgumentParser(description="Job Harness Installer")
-    parser.add_argument('version_file', help='software version file')
+    parser = argparse.ArgumentParser(description="Job Harness Installer",fromfile_prefix_chars="@")
+    parser.add_argument("version_file", help='software version file')
     parser.add_argument('--inst_dir', type=str, default=None,
                         help='installation directory')
     parser.add_argument('--site', type=str, default='SLAC',
                         help='Site (SLAC, BNL, etc.)')
     parser.add_argument('--hj_folders', type=str, default="SLAC")
     parser.add_argument('--ccs_inst_dir', type=str, default=None)
+    parser.add_argument('--dev', action='store_true')
+        
+    installerArguments = None;
+    #Check if there is a previously written installation arguments file
+    #in the script's directory.  
+    installArgsFileName = ".installArgs";
+    installArgsFullPath = os.path.join(os.path.realpath(os.path.dirname(inspect.stack()[0][1])),installArgsFileName)
+    if ( os.path.exists(installArgsFullPath) ):
+        installerArguments = ["@{}".format(installArgsFullPath)]
 
-    args = parser.parse_args()
+    args = parser.parse_args(installerArguments)
     
     installer = Installer(args.version_file, inst_dir=args.inst_dir,
                           hj_folders=args.hj_folders.split(), site=args.site)
@@ -255,4 +311,4 @@ if __name__ == '__main__':
         installer.jh_test()
 
     if args.ccs_inst_dir is not None:
-        installer.ccs(args.ccs_inst_dir)
+        installer.ccs(args)
