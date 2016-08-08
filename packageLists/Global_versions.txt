@@ -21,5 +21,6 @@ CR-WFS-RCV-01 v1
 CR-WFS-EOT-01 v1
 CR-WFS-MET-01 v1
 
-OGP-Scripts = 20160603c
+OGP-Scripts = 20160729
+
 
