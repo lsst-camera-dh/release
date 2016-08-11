@@ -13,15 +13,15 @@ org-lsst-ccs-subsystem-archon-main = 2.0.7
 org-lsst-ccs-subsystem-archon-gui = 2.0.7
 org-lsst-ccs-localdb-main = 2.0.1
 org-lsst-ccs-subsystem-console = 3.0.1
-symlink.ts = org-lsst-ccs-subsystem-teststand-main
-symlink.tsSim = org-lsst-ccs-subsystem-teststand-main
-symlink.archon = org-lsst-ccs-subsystem-archon-main
-symlink.archonSim = org-lsst-ccs-subsystem-archon-main
-symlink.CCS-Console = org-lsst-ccs-subsystem-teststand-gui
-symlink.JythonConsole = org-lsst-ccs-subsystem-console
-symlink.ShellCommandConsole = org-lsst-ccs-subsystem-console
-symlink.LocalRestServices = org-lsst-ccs-localdb-main
-symlink.TrendingIngestModule = org-lsst-ccs-localdb-main
+executable.ts = org-lsst-ccs-subsystem-teststand-main
+executable.tsSim = org-lsst-ccs-subsystem-teststand-main
+executable.archon = org-lsst-ccs-subsystem-archon-main
+executable.archonSim = org-lsst-ccs-subsystem-archon-main
+executable.CCS-Console = org-lsst-ccs-subsystem-teststand-gui
+executable.JythonConsole = org-lsst-ccs-subsystem-console
+executable.ShellCommandConsole = org-lsst-ccs-subsystem-console
+executable.LocalRestServices = org-lsst-ccs-localdb-main
+executable.TrendingIngestModule = org-lsst-ccs-localdb-main
 
 [dmstack]
 stack_dir = /opt/lsst/redhat6-x86_64-64bit-gcc44/DMstack/Winter2015
