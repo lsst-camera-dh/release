@@ -3,7 +3,6 @@ from __future__ import print_function, absolute_import
 import os
 import subprocess
 import ConfigParser
-import inspect
 
 class Parfile(dict):
     def __init__(self, infile, section):
@@ -170,13 +169,17 @@ PS1="[jh]$ "
 
     def _ccs_download(self, package_name, package_version):
 
+        if not package_name.startswith('org-lsst'):
+            self.github_download(package_name,package_version)
+            return
+
         subdir = '-'.join((package_name, package_version))
         isReleasedVersion = 'SNAPSHOT' not in package_version
 
         if isReleasedVersion and os.path.exists(subdir):
             print("Skipping download of released package {} since it already exists.".format(subdir))
         else:
-            #Download the CCS package only when necessary:
+            # Download the CCS package only when necessary:
             # - if it is a SNAPSHOT version
             # - if it is a released version and it does not exist in the ccs install directory
             base_url = "http://dev.lsstcorp.org:8081/nexus/service/local/artifact/maven/redirect?r=ccs-maven2-public&g=org.lsst"
@@ -212,60 +215,68 @@ PS1="[jh]$ "
 
     def ccs(self, args, section='ccs'):
 
-        #The CCS installation directory
+        # The CCS installation directory
         inst_dir = args.ccs_inst_dir
-        #CCS Installation directory full path from where the script is being run
+        # CCS Installation directory full path from where the script is being run
         inst_dir_full_path = os.path.realpath(args.ccs_inst_dir)
 
-        #Check if the CCS installation directory exists and create it if it does not exist.
+        # Check if the CCS installation directory exists and create it if it does not exist.
         if not os.path.exists(inst_dir_full_path):
             print("Creating CCS install directory {}.".format(inst_dir_full_path))
             os.makedirs(inst_dir_full_path)
 
-        #Change directory to the installation directory
+        # Change directory to the installation directory
         os.chdir(inst_dir)
 
-        #These actions are taken only in a development environment:
+        # These actions are taken only in a development environment:
         # - create a .installArgs file
         # - create a symlink for the update script
         # - create a symlink to the package list file
         if args.dev:
-            #Create a list with the arguments required to build the CCS installation directory
-            ccsArguments = []
-            ccsArguments.append("--ccs_inst_dir")
-            ccsArguments.append(inst_dir_full_path)
-            ccsArguments.append("--site")
-            ccsArguments.append(args.site)
-            ccsArguments.append("--dev")
-            ccsArguments.append(self.version_file)
+            # Create a list with the arguments required to build the CCS installation directory
+            ccs_arguments = []
+            ccs_arguments.append("--ccs_inst_dir")
+            ccs_arguments.append(inst_dir_full_path)
+            ccs_arguments.append("--site")
+            ccs_arguments.append(args.site)
+            ccs_arguments.append("--dev")
+            ccs_arguments.append(self.version_file)
 
-            installFileName = ".installArgs"
-            #If the install file does not exist, create it.
-            if not os.path.exists(installFileName):
-                installFile = open(installFileName, 'w')
-                for arg in ccsArguments:
-                    installFile.write(arg+"\n")
-            #Create a symbolic link to the install script used to create this installation directory
-            self._ccs_symlink("update.py", inspect.stack()[0][1])
-            #Create a symbolic link to the package list file used to create this installation directory
+            install_file_name = ".installArgs"
+            # If the install file does not exist, create it.
+            if not os.path.exists(install_file_name):
+                install_file = open(install_file_name, 'w')
+                for arg in ccs_arguments:
+                    install_file.write(arg+"\n")
+            # Create a symbolic link to the package list file used to create this installation directory
             self._ccs_symlink("packageList.txt", self.version_file)
+            # Create a symbolic link to the install script used to create this installation directory
+            self._ccs_symlink("update.py", os.path.abspath(os.path.join(self.curdir,__file__)))
         try:
             pars = Parfile(self.version_file, section)
         except ConfigParser.NoSectionError:
             return
 
-        #Loop over the content of the [ccs] section to find either
+        # Loop over the content of the [ccs] section to find either
         #  - packages to be downloaded
+        #  - executable symlinks in the bin directory
         #  - symlinks to be created
-        #Symlinks are created after the packages have been downloaded
-        symlinkMap = {}
-        symlinkToken = "symlink."
+        # Symlinks are created after the packages have been downloaded
+        symlink_map = {}
+        symlink_token = "symlink."
+        executable_map = {}
+        executable_token = "executable."
         for x in pars:
-            if not x.startswith(symlinkToken):
-                self._ccs_download(x, pars[x])
+            # Executables
+            if x.startswith(executable_token):
+                executable_map.update({x.replace(executable_token, ''): pars[x]})
+            # Symlinks
+            elif x.startswith(symlink_token):
+                symlink_map.update({x.replace(symlink_token, ''): pars[x]})
             else:
-                symlinkMap.update({x.replace(symlinkToken, ''):pars[x]})
+                self._ccs_download(x, pars[x])
 
+        # Now create the executable symlinks in the distribution bin directory
         try:
             os.mkdir('bin')
         except OSError:
@@ -273,9 +284,13 @@ PS1="[jh]$ "
             pass
         os.chdir('bin')
 
-        #Now create the symlinks
-        for symlinkName in symlinkMap:
-            self._ccs_symlink(symlinkName, "../{}/bin/CCSbootstrap.sh".format(symlinkMap[symlinkName]))
+        for executable_name in executable_map:
+            self._ccs_symlink(executable_name, "../{}/bin/CCSbootstrap.sh".format(executable_map[executable_name]))
+
+        # Now create the symlinks from the top level of the distribution directory
+        os.chdir('..')
+        for symlink_name in symlink_map:
+            self._ccs_symlink(symlink_name, symlink_map[symlink_name])
         os.chdir(self.curdir)
 
 if __name__ == '__main__':
@@ -293,10 +308,10 @@ if __name__ == '__main__':
     parser.add_argument('--dev', action='store_true')
 
     installerArguments = None
-    #Check if there is a previously written installation arguments file
-    #in the script's directory.
+    # Check if there is a previously written installation arguments file
+    # in the script's directory.
     installArgsFileName = ".installArgs"
-    installArgsFullPath = os.path.join(os.path.realpath(os.path.dirname(inspect.stack()[0][1])), installArgsFileName)
+    installArgsFullPath = os.path.join(os.path.realpath(os.path.dirname(__file__)), installArgsFileName)
     if os.path.exists(installArgsFullPath):
         installerArguments = ["@{}".format(installArgsFullPath)]
 
