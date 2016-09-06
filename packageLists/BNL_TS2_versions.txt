@@ -7,23 +7,10 @@ lcatr-modulefiles = 0.3.1
 
 [hj_packages]
 metrology-data-analysis = 0.0.4
+OGP-scripts = 20160901
+
 
 [ccs]
-org-lsst-ccs-subsystem-teststand-main = 1.1.11
-org-lsst-ccs-subsystem-teststand-gui = 1.1.11
-org-lsst-ccs-subsystem-archon-main = 2.0.4
-org-lsst-ccs-subsystem-archon-gui = 2.0.4
-org-lsst-ccs-localdb-main = 2.0.1
-org-lsst-ccs-subsystem-console = 3.0.1
-executable.ts = org-lsst-ccs-subsystem-teststand-main
-executable.tsSim = org-lsst-ccs-subsystem-teststand-main
-executable.archon = org-lsst-ccs-subsystem-archon-main
-executable.archonSim = org-lsst-ccs-subsystem-archon-main
-executable.CCS-Console = org-lsst-ccs-subsystem-teststand-gui
-executable.JythonConsole = org-lsst-ccs-subsystem-console
-executable.ShellCommandConsole = org-lsst-ccs-subsystem-console
-executable.LocalRestServices = org-lsst-ccs-localdb-main
-executable.TrendingIngestModule = org-lsst-ccs-localdb-main
 
 [dmstack]
-stack_dir = /opt/lsst/redhat6-x86_64-64bit-gcc44/DMstack/Winter2015
+
