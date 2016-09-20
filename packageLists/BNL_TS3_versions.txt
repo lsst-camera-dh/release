@@ -1,5 +1,5 @@
 [jh]
-eotest = 0.0.16
+eotest = 0.0.17
 harnessed-jobs = 0.3.49
 lcatr-harness = 0.9.1
 lcatr-schema = 0.5.2
@@ -9,8 +9,8 @@ config_files = 0.0.8
 [ccs]
 org-lsst-ccs-subsystem-teststand-main = 1.1.15
 org-lsst-ccs-subsystem-teststand-gui = 1.1.15
-org-lsst-ccs-subsystem-archon-main = 2.0.10
-org-lsst-ccs-subsystem-archon-gui = 2.0.10
+org-lsst-ccs-subsystem-archon-main = 2.0.12
+org-lsst-ccs-subsystem-archon-gui = 2.0.12
 org-lsst-ccs-localdb-main = 2.0.1
 org-lsst-ccs-subsystem-console = 3.0.1
 executable.ts = org-lsst-ccs-subsystem-teststand-main
@@ -24,4 +24,4 @@ executable.LocalRestServices = org-lsst-ccs-localdb-main
 executable.TrendingIngestModule = org-lsst-ccs-localdb-main
 
 [dmstack]
-stack_dir = /opt/lsst/redhat6-x86_64-64bit-gcc44/DMstack/v12_0
+stack_dir = /opt/lsst/redhat6-x86_64-64bit-gcc44/DMstack/Winter2015
