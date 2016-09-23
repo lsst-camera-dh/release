@@ -13,9 +13,10 @@ These files identify the repository tags for the packages in `lsst-camera-dh` un
 ### Example installation sequence:
 ```
 $ git clone git@github.com:lsst-camera-dh/release.git
-$ release/bin/install --help
+$ release/bin/install.py --help
 usage: install.py [-h] [--inst_dir INST_DIR] [--site SITE]
                   [--hj_folders HJ_FOLDERS] [--ccs_inst_dir CCS_INST_DIR]
+                  [--dev]
                   version_file
 
 Job Harness Installer
@@ -29,6 +30,7 @@ optional arguments:
   --site SITE           Site (SLAC, BNL, etc.)
   --hj_folders HJ_FOLDERS
   --ccs_inst_dir CCS_INST_DIR
+  --dev
   
 $ mkdir <install directory>
 $ release/bin/install.py --inst_dir <install directory> release/packageLists/SLAC_Offline_versions.txt
