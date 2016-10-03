@@ -25,4 +25,4 @@ symlink.LocalRestServices = org-lsst-ccs-localdb-main
 symlink.TrendingIngestModule = org-lsst-ccs-localdb-main
 
 [dmstack]
-stack_dir = /opt/lsst/redhat6-x86_64-64bit-gcc44/DMstack/Winter2015
+stack_dir = /opt/lsst/redhat6-x86_64-64bit-gcc44/DMstack/V12_1
