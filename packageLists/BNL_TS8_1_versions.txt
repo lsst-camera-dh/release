@@ -1,7 +1,7 @@
 [jh]
 eotest = 0.0.15
 harnessed-jobs = 0.3.42
-lcatr-harness = 0.9.1
+lcatr-harness = 0.10.0
 lcatr-schema = 0.5.2
 lcatr-modulefiles = 0.3.1
 config_files = 0.0.7
