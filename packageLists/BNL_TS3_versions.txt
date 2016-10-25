@@ -1,7 +1,7 @@
 [jh]
 eotest = 0.0.17
 harnessed-jobs = 0.3.49
-lcatr-harness = 0.9.1
+lcatr-harness = 0.10.0
 lcatr-schema = 0.5.2
 lcatr-modulefiles = 0.3.1
 config_files = 0.0.8
@@ -24,4 +24,8 @@ executable.LocalRestServices = org-lsst-ccs-localdb-main
 executable.TrendingIngestModule = org-lsst-ccs-localdb-main
 
 [dmstack]
-stack_dir = /opt/lsst/redhat6-x86_64-64bit-gcc44/DMstack/Winter2015
+stack_dir = /home/ts3prod/miniconda2/
+
+[datacat]
+datacatdir = /afs/slac/u/gl/srs/datacat/dev/0.4
+datacat_config = /nfs/farm/g/lsst/u1/software/datacat/config.cfg
