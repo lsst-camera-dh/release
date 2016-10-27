@@ -1,8 +1,8 @@
 [webapp]
 eTraveler-dbSchema = 0.13.0
-eTraveler-frontEnd = 1.2.12
+eTraveler-frontEnd = 1.2.14.2
 eTraveler-travelerDefinition = 1.34
-dataPortal = 0.2.2
+dataPortal = 0.2.3
 
 [traveler]
 SR-MET-01 = v3
@@ -24,7 +24,7 @@ CR-WFS-EOT-01 v1
 CR-WFS-MET-01 v1
 CR-WFS-RCV-02 v1
 
-NCR v1
+NCR v3
 
 OGP-Scripts = 20160927
 
