@@ -1,11 +1,11 @@
 [jh]
-harnessed-jobs = 0.3.49
+harnessed-jobs = 0.3.56
 eotest = 0.0.10
 lcatr-harness = 0.10.0
 lcatr-schema = 0.5.2
 lcatr-modulefiles = 0.3.1
 metrology-data-analysis = 0.0.4
-OGP-scripts = 20161020
+OGP-scripts = 20161025b
 
 [ccs]
 
