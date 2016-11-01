@@ -1,0 +1,10 @@
+[jh]
+harnessed-jobs = 0.3.49-slac
+lcatr-harness = 0.10.0
+lcatr-schema = 0.5.2
+lcatr-modulefiles = 0.3.1
+
+[hj_packages]
+REB-testing = 0.0.0
+
+[ccs]
