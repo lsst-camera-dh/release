@@ -10,10 +10,10 @@ REB-testing = 0.0.0
 [ccs]
 org-lsst-ccs-subsystem-rafts-main = 1.6.1
 org-lsst-ccs-subsystem-rafts-gui = 1.6.1
-org-lsst-ccs-localdb-main = 2.3.1
-org-lsst-ccs-subsystem-console = 3.0.1
+org-lsst-ccs-localdb-main = 3.0.1
+org-lsst-ccs-subsystem-console = 4.0.1
 #config_files = 0.0.7
-executable.runReb4 = org-lsst-ccs-subsystem-rafts-main
+executable.Reb4Run = org-lsst-ccs-subsystem-rafts-main
 executable.CCS-Console = org-lsst-ccs-subsystem-rafts-gui
 executable.JythonConsole = org-lsst-ccs-subsystem-console
 executable.ShellCommandConsole = org-lsst-ccs-subsystem-console
