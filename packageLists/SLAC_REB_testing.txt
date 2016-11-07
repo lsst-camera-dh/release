@@ -5,7 +5,7 @@ lcatr-schema = 0.5.2
 lcatr-modulefiles = 0.3.1
 
 [hj_packages]
-REB-testing = 0.0.0
+REB-testing = 0.0.1
 
 [ccs]
 org-lsst-ccs-subsystem-rafts-main = 1.6.1
