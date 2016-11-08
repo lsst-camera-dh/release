@@ -79,7 +79,10 @@ class Installer(object):
     def write_setup(self):
         stack_dir = self.stack_dir
         inst_dir = self.inst_dir
-        hj_version = self.pars['harnessed-jobs']
+        try:
+            hj_version = self.pars['harnessed-jobs']
+        except KeyError:
+            hj_version = None
         site = self.site
         module_path = subprocess.check_output('ls -d %(inst_dir)s/lib/python*/site-packages' % locals(), shell=True).strip()
         python_dirs = [os.path.join(x, 'python') for x in self.package_dirs]
@@ -100,21 +103,27 @@ export DATACAT_CONFIG=%(datacat_config)s
 export PYTHONPATH=%(python_path)s""" % locals()
         except ConfigParser.NoSectionError:
             python_configs = "export PYTHONPATH=%(python_path)s" % locals()
-        contents = """export STACK_DIR=%(stack_dir)s
+        contents = "export INST_DIR=%(inst_dir)s"
+        if stack_dir is not None:
+            contents += """
+export STACK_DIR=%(stack_dir)s
 source ${STACK_DIR}/loadLSST.bash
-export INST_DIR=%(inst_dir)s
 export EUPS_PATH=${INST_DIR}/eups:${EUPS_PATH}
 setup eotest
-setup mysqlpython
+setup mysqlpython"""
+        if hj_version is not None:
+            contents += """
+export HARNESSEDJOBSDIR=${INST_DIR}/harnessed-jobs-%(hj_version)s
+export LCATR_SCHEMA_PATH=${HARNESSEDJOBSDIR}/schemas:${LCATR_SCHEMA_PATH}"""
+        contents += """
 export VIRTUAL_ENV=${INST_DIR}
 source ${INST_DIR}/Modules/3.2.10/init/bash
-export HARNESSEDJOBSDIR=${INST_DIR}/harnessed-jobs-%(hj_version)s
 %(python_configs)s
 export PATH=%(bin_path)s
 export SITENAME=%(site)s
-export LCATR_SCHEMA_PATH=${HARNESSEDJOBSDIR}/schemas:${LCATR_SCHEMA_PATH}
 PS1="[jh]$ "
-""" % locals()
+"""
+        contents = contents % locals()
         output = open(os.path.join(self.inst_dir, 'setup.sh'), 'w')
         output.write(contents)
         output.close()
@@ -132,16 +141,22 @@ PS1="[jh]$ "
         inst_dir = self.inst_dir
         subprocess.call('ln -sf %(inst_dir)s/share/modulefiles %(inst_dir)s/Modules' % locals(), shell=True, executable="/bin/bash")
         subprocess.call('touch `ls -d %(inst_dir)s/lib/python*/site-packages/lcatr`/__init__.py' % locals(), shell=True, executable="/bin/bash")
-        eotest_version = self.pars['eotest']
-        self.github_download('eotest', eotest_version)
-        stack_dir = self.stack_dir
-        commands = """source %(stack_dir)s/loadLSST.bash; mkdir -p %(inst_dir)s/eups/ups_db; export EUPS_PATH=%(inst_dir)s/eups:${EUPS_PATH}; cd eotest-%(eotest_version)s/; eups declare eotest %(eotest_version)s -r . -c; setup eotest; setup mysqlpython; scons opt=3""" % locals()
-        subprocess.call(commands, shell=True, executable="/bin/bash")
-        hj_version = self.pars['harnessed-jobs']
-        self.github_download('harnessed-jobs', hj_version)
-        for folder in self.hj_folders:
-            subprocess.call('ln -sf %(inst_dir)s/harnessed-jobs-%(hj_version)s/%(folder)s/* %(inst_dir)s/share' % locals(), shell=True, executable="/bin/bash")
-        self.hj_package_installer()
+        try:
+            eotest_version = self.pars['eotest']
+            self.github_download('eotest', eotest_version)
+            stack_dir = self.stack_dir
+            commands = """source %(stack_dir)s/loadLSST.bash; mkdir -p %(inst_dir)s/eups/ups_db; export EUPS_PATH=%(inst_dir)s/eups:${EUPS_PATH}; cd eotest-%(eotest_version)s/; eups declare eotest %(eotest_version)s -r . -c; setup eotest; setup mysqlpython; scons opt=3""" % locals()
+            subprocess.call(commands, shell=True, executable="/bin/bash")
+        except KeyError:
+            pass
+        try:
+            hj_version = self.pars['harnessed-jobs']
+            self.github_download('harnessed-jobs', hj_version)
+            for folder in self.hj_folders:
+                subprocess.call('ln -sf %(inst_dir)s/harnessed-jobs-%(hj_version)s/%(folder)s/* %(inst_dir)s/share' % locals(), shell=True, executable="/bin/bash")
+            self.hj_package_installer()
+        except KeyError:
+            pass
         self.write_setup()
         os.chdir(self.curdir)
 
@@ -162,10 +177,14 @@ PS1="[jh]$ "
 
     def jh_test(self):
         os.chdir(self.inst_dir)
-        hj_version = self.pars['harnessed-jobs']
-        command = 'source ./setup.sh; python harnessed-jobs-%(hj_version)s/tests/setup_test.py' % locals()
-        subprocess.call(command, shell=True, executable="/bin/bash")
-        os.chdir(self.curdir)
+        try:
+            self.pars['eotest']
+            hj_version = self.pars['harnessed-jobs']
+            command = 'source ./setup.sh; python harnessed-jobs-%(hj_version)s/tests/setup_test.py' % locals()
+            subprocess.call(command, shell=True, executable="/bin/bash")
+            os.chdir(self.curdir)
+        except KeyError:
+            pass
 
     def _ccs_download(self, package_name, package_version):
 
