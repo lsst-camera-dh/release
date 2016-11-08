@@ -6,9 +6,14 @@ lcatr-modulefiles = 0.3.1
 
 [hj_packages]
 REB-testing = 0.0.2
+eTraveler-clientAPI = 1.2.1
 
 [dmstack]
 stack_dir = /nfs/farm/g/lsst/u1/software/redhat6-x86_64-64bit-gcc44/DMstack/v12_0
+
+[datacat]
+datacatdir = /afs/slac/u/gl/srs/datacat/dev/0.4
+datacat_config = /nfs/farm/g/lsst/u1/software/datacat/config.cfg
 
 [ccs]
 org-lsst-ccs-subsystem-rafts-main = 1.6.1
