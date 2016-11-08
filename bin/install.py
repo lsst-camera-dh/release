@@ -35,6 +35,7 @@ class Installer(object):
         self.hj_folders = hj_folders
         self.site = site
         self._stack_dir = None
+        self._datacat_pars = None
         self.curdir = os.path.abspath('.')
         self.package_dirs = []
 
@@ -76,32 +77,39 @@ class Installer(object):
                 pass
         return self._stack_dir
 
+    @property
+    def datacat_pars(self):
+        if self._datacat_pars is None:
+            try:
+                self._datacat_pars = Parfile(self.version_file, 'datacat')
+            except ConfigParser.NoSectionError:
+                pass
+        return self._datacat_pars
+
     def write_setup(self):
         stack_dir = self.stack_dir
         inst_dir = self.inst_dir
-        try:
-            hj_version = self.pars['harnessed-jobs']
-        except KeyError:
-            hj_version = None
+        hj_version = self.pars['harnessed-jobs']
         site = self.site
+        datacat_pars = self.datacat_pars
         module_path = subprocess.check_output('ls -d %(inst_dir)s/lib/python*/site-packages' % locals(), shell=True).strip()
         python_dirs = [os.path.join(x, 'python') for x in self.package_dirs]
-        python_dirs.extend(['${DATACATDIR}',
-                            '${HARNESSEDJOBSDIR}/python',
+        if datacat_pars is not None:
+            python_dirs.append('${DATACATDIR}')
+        python_dirs.extend(['${HARNESSEDJOBSDIR}/python',
                             module_path,
                             '${PYTHONPATH}'])
         python_path = ":".join(python_dirs)
         bin_dirs = [os.path.join(x, 'bin') for x in self.package_dirs]
         bin_dirs.extend(['${INST_DIR}/bin', '${PATH}'])
         bin_path = ":".join(bin_dirs)
-        try:
-            datacat_pars = Parfile(self.version_file, 'datacat')
+        if datacat_pars is not None:
             datacatdir = os.path.join(datacat_pars['datacatdir'])
             datacat_config = datacat_pars['datacat_config']
             python_configs = """export DATACATDIR=%(datacatdir)s/lib
 export DATACAT_CONFIG=%(datacat_config)s
 export PYTHONPATH=%(python_path)s""" % locals()
-        except ConfigParser.NoSectionError:
+        else:
             python_configs = "export PYTHONPATH=%(python_path)s" % locals()
         contents = "export INST_DIR=%(inst_dir)s"
         if stack_dir is not None:
@@ -111,11 +119,9 @@ source ${STACK_DIR}/loadLSST.bash
 export EUPS_PATH=${INST_DIR}/eups:${EUPS_PATH}
 setup eotest
 setup mysqlpython"""
-        if hj_version is not None:
-            contents += """
-export HARNESSEDJOBSDIR=${INST_DIR}/harnessed-jobs-%(hj_version)s
-export LCATR_SCHEMA_PATH=${HARNESSEDJOBSDIR}/schemas:${LCATR_SCHEMA_PATH}"""
         contents += """
+export HARNESSEDJOBSDIR=${INST_DIR}/harnessed-jobs-%(hj_version)s
+export LCATR_SCHEMA_PATH=${HARNESSEDJOBSDIR}/schemas:${LCATR_SCHEMA_PATH}
 export VIRTUAL_ENV=${INST_DIR}
 source ${INST_DIR}/Modules/3.2.10/init/bash
 %(python_configs)s
@@ -149,14 +155,12 @@ PS1="[jh]$ "
             subprocess.call(commands, shell=True, executable="/bin/bash")
         except KeyError:
             pass
-        try:
-            hj_version = self.pars['harnessed-jobs']
-            self.github_download('harnessed-jobs', hj_version)
-            for folder in self.hj_folders:
-                subprocess.call('ln -sf %(inst_dir)s/harnessed-jobs-%(hj_version)s/%(folder)s/* %(inst_dir)s/share' % locals(), shell=True, executable="/bin/bash")
-            self.hj_package_installer()
-        except KeyError:
-            pass
+
+        hj_version = self.pars['harnessed-jobs']
+        self.github_download('harnessed-jobs', hj_version)
+        for folder in self.hj_folders:
+            subprocess.call('ln -sf %(inst_dir)s/harnessed-jobs-%(hj_version)s/%(folder)s/* %(inst_dir)s/share' % locals(), shell=True, executable="/bin/bash")
+        self.hj_package_installer()
         self.write_setup()
         os.chdir(self.curdir)
 
