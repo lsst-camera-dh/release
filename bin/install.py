@@ -116,9 +116,14 @@ export PYTHONPATH=%(python_path)s""" % locals()
             contents += """
 export STACK_DIR=%(stack_dir)s
 source ${STACK_DIR}/loadLSST.bash
-export EUPS_PATH=${INST_DIR}/eups:${EUPS_PATH}
+export EUPS_PATH=${INST_DIR}/eups:${EUPS_PATH}"""
+        try:
+            self.pars['eotest']
+            contents += """
 setup eotest
 setup mysqlpython"""
+        except KeyError:
+            pass
         contents += """
 export HARNESSEDJOBSDIR=${INST_DIR}/harnessed-jobs-%(hj_version)s
 export LCATR_SCHEMA_PATH=${HARNESSEDJOBSDIR}/schemas:${LCATR_SCHEMA_PATH}
