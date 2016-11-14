@@ -1,0 +1,10 @@
+[jh]
+harnessed-jobs = 0.3.64
+lcatr-harness = 0.10.0
+lcatr-schema = 0.5.2
+lcatr-modulefiles = 0.3.1
+eotest = 0.0.17
+
+[dmstack]
+stack_dir = /home/HardwareReceipt/miniconda2/
+
