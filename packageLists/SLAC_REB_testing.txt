@@ -5,7 +5,7 @@ lcatr-schema = 0.5.2
 lcatr-modulefiles = 0.3.1
 
 [hj_packages]
-REB-testing = 0.0.2
+REB-testing = 0.0.4
 eTraveler-clientAPI = 1.2.1
 
 [dmstack]
