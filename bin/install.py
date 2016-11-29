@@ -115,6 +115,7 @@ export EUPS_PATH=${INST_DIR}/eups:${EUPS_PATH}
 
         contents += self._eups_config()
         contents += self._jh_config()
+        contents += self._schema_paths()
         contents += self._package_env_vars()
         contents += self._python_configs()
         contents += 'PS1="[jh]$ "\n'
@@ -138,12 +139,20 @@ export EUPS_PATH=${INST_DIR}/eups:${EUPS_PATH}
         hj_version = self.pars['harnessed-jobs']
         site = self.site
         return """export HARNESSEDJOBSDIR=${INST_DIR}/harnessed-jobs-%(hj_version)s
-export LCATR_SCHEMA_PATH=${HARNESSEDJOBSDIR}/schemas:${LCATR_SCHEMA_PATH}
 export VIRTUAL_ENV=${INST_DIR}
 source ${INST_DIR}/Modules/3.2.10/init/bash
 export PATH=%(bin_path)s
 export SITENAME=%(site)s
 """ % locals()
+
+    def _schema_paths(self):
+        paths = []
+        for package, package_dir in self.package_dirs.items():
+            if not os.path.isdir(os.path.join(package_dir, 'schemas')):
+                continue
+            paths.append("${%s}/schemas" % self._env_var(package))
+        paths.extend(['${HARNESSEDJOBSDIR}/schemas', '${LCATR_SCHEMA_PATH}'])
+        return 'export LCATR_SCHEMA_PATH=' + ':'.join(paths) + '\n'
 
     def _package_env_vars(self):
         contents = ""

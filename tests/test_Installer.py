@@ -35,9 +35,10 @@ class InstallerTestCase(unittest.TestCase):
 
         self.assertEqual(installer._eups_config(), 'setup eotest\n')
 
+        self.assertEqual(installer._schema_paths(), 'export LCATR_SCHEMA_PATH=${HARNESSEDJOBSDIR}/schemas:${LCATR_SCHEMA_PATH}\n')
+
         self.assertEqual(installer._jh_config(),
                          '''export HARNESSEDJOBSDIR=${INST_DIR}/harnessed-jobs-0.3.49-slac
-export LCATR_SCHEMA_PATH=${HARNESSEDJOBSDIR}/schemas:${LCATR_SCHEMA_PATH}
 export VIRTUAL_ENV=${INST_DIR}
 source ${INST_DIR}/Modules/3.2.10/init/bash
 export PATH=${INST_DIR}/bin:${PATH}
