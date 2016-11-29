@@ -59,7 +59,8 @@ class Installer(object):
         commands = ["curl -L -O " + url,
                     "tar xzf %(version)s.tar.gz" % locals()]
         for command in commands:
-            subprocess.call(command, shell=True, executable=self._executable)
+            subprocess.call(command, shell=True,
+                            executable=Installer._executable)
 
     def lcatr_install(self, package_name):
         version = self.pars[package_name]
@@ -88,63 +89,72 @@ class Installer(object):
         return self._datacat_pars
 
     def write_setup(self):
-        contents = "export INST_DIR=%s" % self.inst_dir
-
-        stack_dir = self.stack_dir
-        if stack_dir is not None:
-            contents += """
-export STACK_DIR=%(stack_dir)s
+        contents = "export INST_DIR=%s\n" % self.inst_dir
+        if self.stack_dir is not None:
+            contents += """export STACK_DIR=%s
 source ${STACK_DIR}/loadLSST.bash
-export EUPS_PATH=${INST_DIR}/eups:${EUPS_PATH}"""
+export EUPS_PATH=${INST_DIR}/eups:${EUPS_PATH}
+""" % self.stack_dir
         try:
             self.pars['eotest']
-            contents += """
-setup eotest
-setup mysqlpython"""
+            contents += """setup eotest
+setup mysqlpython
+"""
         except KeyError:
             pass
 
-        contents += self._package_env_vars()
-        contents += self._python_configs()
-        bin_dirs = [os.path.join(x, 'bin') for x in self.package_dirs.values()
+        bin_dirs = [os.path.join('${INST_DIR}', os.path.split(x)[-1], 'bin')
+                    for x in self.package_dirs.values()
                     if os.path.isdir(os.path.join(x, 'bin'))]
         bin_path = ":".join(bin_dirs + ['${INST_DIR}/bin', '${PATH}'])
         hj_version = self.pars['harnessed-jobs']
         site = self.site
-        contents += """
-export HARNESSEDJOBSDIR=${INST_DIR}/harnessed-jobs-%(hj_version)s
+        contents += """export HARNESSEDJOBSDIR=${INST_DIR}/harnessed-jobs-%(hj_version)s
 export LCATR_SCHEMA_PATH=${HARNESSEDJOBSDIR}/schemas:${LCATR_SCHEMA_PATH}
 export VIRTUAL_ENV=${INST_DIR}
 source ${INST_DIR}/Modules/3.2.10/init/bash
 export PATH=%(bin_path)s
 export SITENAME=%(site)s
-PS1="[jh]$ "
+""" % locals()
+        contents += self._package_env_vars()
+        contents += self._python_configs()
+        contents +="""PS1="[jh]$ "
 """
-        contents = contents % locals()
         output = open(os.path.join(self.inst_dir, 'setup.sh'), 'w')
         output.write(contents)
         output.close()
 
     def _package_env_vars(self):
         contents = ""
-        for package, subdir in self.package_dirs.items():
-            contents += "export %(package)s=${INST_DIR}/%(subdir)s\n" % locals()
+        for package, package_dir in self.package_dirs.items():
+            subdir = os.path.split(package_dir.rstrip(os.path.sep))[-1]
+            env_var = self._env_var(package)
+            contents += ("export %s=${INST_DIR}/%s\n" % (env_var, subdir))
         return contents
 
-    def _python_configs(self):
-        datacat_pars = self.datacat_pars
+    @staticmethod
+    def _env_var(package_name):
+        return package_name.replace('-', '').upper() + 'DIR'
+
+    def _module_path(self):
         module_path = subprocess.check_output('ls -d %s/lib/python*/site-packages' % self.inst_dir, shell=True).strip()
-        python_dirs = [os.path.join(x, 'python') for x in self.package_dirs]
+        return os.path.join('${INST_DIR}',
+                            module_path[len(self.inst_dir):].lstrip(os.path.sep))
+
+    def _python_configs(self):
+        python_dirs = [os.path.join('${'+self._env_var(x)+'}', 'python')
+                       for x in self.package_dirs]
+        datacat_pars = self.datacat_pars
         if datacat_pars is not None:
             python_dirs.append('${DATACATDIR}')
-        python_dirs.extend(['${HARNESSEDJOBSDIR}/python',
-                            module_path,
+        python_dirs.extend(['${HARNESSEDJOBSDIR}/python', self._module_path(),
                             '${PYTHONPATH}'])
-        python_configs = "export PYTHONPATH=%s\n" % ":".join(python_dirs)
+        python_configs = ''
         if datacat_pars is not None:
             python_configs += """export DATACATDIR=%s/lib
 export DATACAT_CONFIG=%s
 """ % (os.path.join(datacat_pars['datacatdir']), datacat_pars['datacat_config'])
+        python_configs += "export PYTHONPATH=%s\n" % ":".join(python_dirs)
         return python_configs
 
     def jh(self):
@@ -160,7 +170,7 @@ export DATACAT_CONFIG=%s
         try:
             eotest_version = self.pars['eotest']
             self.github_download('eotest', eotest_version)
-            stack_dir = self.stack_dir
+            stack_dir = self.stack_dir.rstrip(os.path.sep)
             commands = """source %(stack_dir)s/loadLSST.bash; mkdir -p %(inst_dir)s/eups/ups_db; export EUPS_PATH=%(inst_dir)s/eups:${EUPS_PATH}; cd eotest-%(eotest_version)s/; eups declare eotest %(eotest_version)s -r . -c; setup eotest; setup mysqlpython; scons opt=3""" % locals()
             subprocess.call(commands, shell=True, executable=self._executable)
         except KeyError:
