@@ -234,7 +234,7 @@ export DATACAT_CONFIG=%s
     def jh_test(self):
         os.chdir(self.inst_dir)
         try:
-            pars = Parfile[self.version_file, 'eups_packages']
+            pars = Parfile(self.version_file, 'eups_packages')
             pars['eotest']
             hj_version = self.pars['harnessed-jobs']
             command = 'source ./setup.sh; python harnessed-jobs-%(hj_version)s/tests/setup_test.py' % locals()
