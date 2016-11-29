@@ -77,7 +77,7 @@ class Installer(object):
         if self._package_dirs is None:
             self._package_dirs = {}
             try:
-                pars = Parfile(self.version_file, 'hj_packages')
+                pars = Parfile(self.version_file, 'packages')
                 for package, version in pars.items():
                     package_dir = "%(package)s-%(version)s" % locals()
                     self._package_dirs[package] = os.path.join(self.inst_dir,
@@ -204,13 +204,13 @@ export DATACAT_CONFIG=%s
         self.github_download('harnessed-jobs', hj_version)
         for folder in self.hj_folders:
             subprocess.call('ln -sf %(inst_dir)s/harnessed-jobs-%(hj_version)s/%(folder)s/* %(inst_dir)s/share' % locals(), shell=True, executable=self._executable)
-        self.hj_package_installer()
+        self.package_installer()
         self.write_setup()
         os.chdir(self.curdir)
 
-    def hj_package_installer(self):
+    def package_installer(self):
         try:
-            pars = Parfile(self.version_file, 'hj_packages')
+            pars = Parfile(self.version_file, 'packages')
         except ConfigParser.NoSectionError:
             return
         inst_dir = self.inst_dir

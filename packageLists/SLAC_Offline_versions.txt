@@ -5,7 +5,7 @@ lcatr-harness = 0.10.0
 lcatr-schema = 0.5.2
 lcatr-modulefiles = 0.3.1
 
-[hj_packages]
+[packages]
 metrology-data-analysis = 0.0.9
 offline-jobs = 0.0.16
 
