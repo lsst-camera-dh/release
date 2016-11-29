@@ -41,6 +41,7 @@ class Installer(object):
         self._stack_dir = None
         self._datacat_pars = None
         self.curdir = os.path.abspath('.')
+        self.pars = Parfile(self.version_file, 'jh')
 
     def modules_install(self):
         url = 'http://sourceforge.net/projects/modules/files/Modules/modules-3.2.10/modules-3.2.10.tar.gz'
@@ -119,26 +120,29 @@ setup mysqlpython
         except KeyError:
             pass
 
+        contents += self._jh_config()
+        contents += self._package_env_vars()
+        contents += self._python_configs()
+        contents += 'PS1="[jh]$ "\n'
+
+        output = open(os.path.join(self.inst_dir, 'setup.sh'), 'w')
+        output.write(contents)
+        output.close()
+
+    def _jh_config(self):
         bin_dirs = [os.path.join('${INST_DIR}', os.path.split(x)[-1], 'bin')
                     for x in self.package_dirs.values()
                     if os.path.isdir(os.path.join(x, 'bin'))]
         bin_path = ":".join(bin_dirs + ['${INST_DIR}/bin', '${PATH}'])
         hj_version = self.pars['harnessed-jobs']
         site = self.site
-        contents += """export HARNESSEDJOBSDIR=${INST_DIR}/harnessed-jobs-%(hj_version)s
+        return """export HARNESSEDJOBSDIR=${INST_DIR}/harnessed-jobs-%(hj_version)s
 export LCATR_SCHEMA_PATH=${HARNESSEDJOBSDIR}/schemas:${LCATR_SCHEMA_PATH}
 export VIRTUAL_ENV=${INST_DIR}
 source ${INST_DIR}/Modules/3.2.10/init/bash
 export PATH=%(bin_path)s
 export SITENAME=%(site)s
 """ % locals()
-        contents += self._package_env_vars()
-        contents += self._python_configs()
-        contents +="""PS1="[jh]$ "
-"""
-        output = open(os.path.join(self.inst_dir, 'setup.sh'), 'w')
-        output.write(contents)
-        output.close()
 
     def _package_env_vars(self):
         contents = ""
@@ -179,7 +183,6 @@ export DATACAT_CONFIG=%s
         return python_configs
 
     def jh(self):
-        self.pars = Parfile(self.version_file, 'jh')
         os.chdir(self.inst_dir)
         self.modules_install()
         self.lcatr_install('lcatr-harness')
