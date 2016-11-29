@@ -1,5 +1,4 @@
 [jh]
-eotest = 0.0.18
 harnessed-jobs = 0.3.49-slac
 lcatr-harness = 0.10.0
 lcatr-schema = 0.5.2
@@ -8,6 +7,9 @@ lcatr-modulefiles = 0.3.1
 [packages]
 metrology-data-analysis = 0.0.10
 offline-jobs = 0.0.16
+
+[eups_packages]
+eotest = 0.0.18
 
 [dmstack]
 stack_dir = /nfs/farm/g/lsst/u1/software/redhat6-x86_64-64bit-gcc44/DMstack/v12_0

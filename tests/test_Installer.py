@@ -17,10 +17,11 @@ class InstallerTestCase(unittest.TestCase):
     def test_Parfile(self):
         "Test Parfile class."
         pars = Parfile(self.versions_txt, 'jh')
-        self.assertEqual(pars['eotest'], '0.0.18')
         self.assertEqual(pars._cast('None'), None)
         self.assertEqual(pars._cast('3'), 3)
         self.assertAlmostEqual(pars._cast('0.13152'), 0.13152)
+        eups_pars = Parfile(self.versions_txt, 'eups_packages')
+        self.assertEqual(eups_pars['eotest'], '0.0.18')
 
     def test_Installer_methods(self):
         "Test various methods of the Installer class."
@@ -31,6 +32,8 @@ class InstallerTestCase(unittest.TestCase):
         package_name = 'metrology-data-analysis'
         self.assertEqual(installer._env_var(package_name),
                          'METROLOGYDATAANALYSISDIR')
+
+        self.assertEqual(installer._eups_config(), 'setup eotest\n')
 
         self.assertEqual(installer._jh_config(),
                          '''export HARNESSEDJOBSDIR=${INST_DIR}/harnessed-jobs-0.3.49-slac

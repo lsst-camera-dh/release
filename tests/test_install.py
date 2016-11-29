@@ -5,7 +5,7 @@ import subprocess
 running_at_slac = \
     subprocess.check_output('hostname -d', shell=True) == 'slac.stanford.edu\n'
 
-@unittest.skipUnless(running_at_slac, "Not runnining at slac")
+@unittest.skipUnless(running_at_slac, "Not running at slac")
 class InstallTestCase(unittest.TestCase):
     "TestCase class for install.py execution."
 

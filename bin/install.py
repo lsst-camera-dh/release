@@ -112,14 +112,8 @@ class Installer(object):
 source ${STACK_DIR}/loadLSST.bash
 export EUPS_PATH=${INST_DIR}/eups:${EUPS_PATH}
 """ % self.stack_dir
-        try:
-            self.pars['eotest']
-            contents += """setup eotest
-setup mysqlpython
-"""
-        except KeyError:
-            pass
 
+        contents += self._eups_config()
         contents += self._jh_config()
         contents += self._package_env_vars()
         contents += self._python_configs()
@@ -128,6 +122,13 @@ setup mysqlpython
         output = open(os.path.join(self.inst_dir, 'setup.sh'), 'w')
         output.write(contents)
         output.close()
+
+    def _eups_config(self):
+        try:
+            pars = Parfile(self.version_file, 'eups_packages')
+        except ConfigParser.NoSectionError:
+            return ''
+        return '\n'.join(['setup %s' % package for package in pars]) + '\n'
 
     def _jh_config(self):
         bin_dirs = [os.path.join('${INST_DIR}', os.path.split(x)[-1], 'bin')
@@ -191,22 +192,29 @@ export DATACAT_CONFIG=%s
         inst_dir = self.inst_dir
         subprocess.call('ln -sf %(inst_dir)s/share/modulefiles %(inst_dir)s/Modules' % locals(), shell=True, executable=self._executable)
         subprocess.call('touch `ls -d %(inst_dir)s/lib/python*/site-packages/lcatr`/__init__.py' % locals(), shell=True, executable=self._executable)
-        try:
-            eotest_version = self.pars['eotest']
-            self.github_download('eotest', eotest_version)
-            stack_dir = self.stack_dir.rstrip(os.path.sep)
-            commands = """source %(stack_dir)s/loadLSST.bash; mkdir -p %(inst_dir)s/eups/ups_db; export EUPS_PATH=%(inst_dir)s/eups:${EUPS_PATH}; cd eotest-%(eotest_version)s/; eups declare eotest %(eotest_version)s -r . -c; setup eotest; setup mysqlpython; scons opt=3""" % locals()
-            subprocess.call(commands, shell=True, executable=self._executable)
-        except KeyError:
-            pass
-
         hj_version = self.pars['harnessed-jobs']
         self.github_download('harnessed-jobs', hj_version)
         for folder in self.hj_folders:
             subprocess.call('ln -sf %(inst_dir)s/harnessed-jobs-%(hj_version)s/%(folder)s/* %(inst_dir)s/share' % locals(), shell=True, executable=self._executable)
+        self.eups_package_installer()
         self.package_installer()
         self.write_setup()
         os.chdir(self.curdir)
+
+    def eups_package_installer(self):
+        try:
+            pars = Parfile(self.version_file, 'eups_packages')
+        except ConfigParser.NoSectionError:
+            return
+        inst_dir = self.inst_dir
+        stack_dir = self.stack_dir.rstrip(os.path.sep)
+        ups_db_dir = '%(inst_dir)s/eups/ups_db' % locals()
+        if not os.path.isdir(ups_db_dir):
+            os.makedirs(ups_db_dir)
+        for package, version in pars.items():
+            self.github_download(package, version)
+            commands = """source %(stack_dir)s/loadLSST.bash; export EUPS_PATH=%(inst_dir)s/eups:${EUPS_PATH}; cd %(package)s-%(version)s/; eups declare %(package)s %(version)s -r . -c; setup %(package)s; scons opt=3""" % locals()
+            subprocess.call(commands, shell=True, executable=self._executable)
 
     def package_installer(self):
         try:
@@ -226,7 +234,8 @@ export DATACAT_CONFIG=%s
     def jh_test(self):
         os.chdir(self.inst_dir)
         try:
-            self.pars['eotest']
+            pars = Parfile[self.version_file, 'eups_packages']
+            pars['eotest']
             hj_version = self.pars['harnessed-jobs']
             command = 'source ./setup.sh; python harnessed-jobs-%(hj_version)s/tests/setup_test.py' % locals()
             subprocess.call(command, shell=True, executable=self._executable)
