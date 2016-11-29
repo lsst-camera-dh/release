@@ -1,7 +1,9 @@
 #!/usr/bin/env python
 from __future__ import print_function, absolute_import
 import os
+import glob
 import subprocess
+import warnings
 import ConfigParser
 
 class Parfile(dict):
@@ -35,10 +37,10 @@ class Installer(object):
             self.inst_dir = os.path.abspath(inst_dir)
         self.hj_folders = hj_folders
         self.site = site
+        self._package_dirs = None
         self._stack_dir = None
         self._datacat_pars = None
         self.curdir = os.path.abspath('.')
-        self.package_dirs = {}
 
     def modules_install(self):
         url = 'http://sourceforge.net/projects/modules/files/Modules/modules-3.2.10/modules-3.2.10.tar.gz'
@@ -68,6 +70,20 @@ class Installer(object):
         inst_dir = self.inst_dir
         command = "cd %(package_name)s-%(version)s/; python setup.py install --prefix=%(inst_dir)s" % locals()
         subprocess.call(command, shell=True, executable=self._executable)
+
+    @property
+    def package_dirs(self):
+        if self._package_dirs is None:
+            self._package_dirs = {}
+            try:
+                pars = Parfile(self.version_file, 'hj_packages')
+                for package, version in pars.items():
+                    package_dir = "%(package)s-%(version)s" % locals()
+                    self._package_dirs[package] = os.path.join(self.inst_dir,
+                                                               package_dir)
+            except ConfigParser.NoSectionError:
+                pass
+        return self._package_dirs
 
     @property
     def stack_dir(self):
@@ -137,9 +153,14 @@ export SITENAME=%(site)s
         return package_name.replace('-', '').upper() + 'DIR'
 
     def _module_path(self):
-        module_path = subprocess.check_output('ls -d %s/lib/python*/site-packages' % self.inst_dir, shell=True).strip()
-        return os.path.join('${INST_DIR}',
-                            module_path[len(self.inst_dir):].lstrip(os.path.sep))
+        try:
+            module_path = glob.glob('%s/lib/python*/site-packages'
+                                    % self.inst_dir)[0][len(self.inst_dir):]
+            return os.path.join('${INST_DIR}', module_path.lstrip(os.path.sep))
+        except IndexError:
+            message = "%s/lib/python*/site-packages not found." % self.inst_dir
+            warnings.warn(message)
+            return ''
 
     def _python_configs(self):
         python_dirs = [os.path.join('${'+self._env_var(x)+'}', 'python')
@@ -196,8 +217,8 @@ export DATACAT_CONFIG=%s
             hj_dir = "%(inst_dir)s/%(package_dir)s/harnessed_jobs" % locals()
             if os.path.isdir(hj_dir):
                 command = 'ln -sf %(hj_dir)s/* %(inst_dir)s/share' % locals()
-                subprocess.call(command, shell=True, executable=self._executable)
-            self.package_dirs[package] = os.path.join(inst_dir, package_dir)
+                subprocess.call(command, executable=self._executable,
+                                shell=True)
 
     def jh_test(self):
         os.chdir(self.inst_dir)
