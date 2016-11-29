@@ -20,9 +20,11 @@ class InstallTestCase(unittest.TestCase):
     def test_install_py(self):
         "Test install.py"
         command = '(../bin/install.py --inst_dir tmp test_install_versions.txt) >& install.log'
-        self.assertEqual(subprocess.check_call(command, shell=True), 0)
+        self.assertEqual(subprocess.check_call(command, shell=True,
+                                               executable='/bin/bash'), 0)
         command = 'source tmp/setup.sh; python -c "import siteUtils; import metUtils; import vendorFitsTranslators; import eotestUtils; import lsst.eotest.sensor"'
-        self.assertEqual(subprocess.check_call(command, shell=True), 0)
+        self.assertEqual(subprocess.check_call(command, shell=True,
+                                               executable='/bin/bash'), 0)
 
 if __name__ == '__main__':
     unittest.main()
