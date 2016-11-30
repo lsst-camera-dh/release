@@ -1,10 +1,10 @@
 [jh]
 eotest = 0.0.17
-harnessed-jobs = 0.3.69
+harnessed-jobs = 0.4.1
 lcatr-harness = 0.10.0
 lcatr-schema = 0.5.2
 lcatr-modulefiles = 0.3.1
-metrology-data-analysis = LSSTTD-783
+metrology-data-analysis = 0.0.10
 
 [ccs]
 org-lsst-ccs-subsystem-metrology-main = 1.3
