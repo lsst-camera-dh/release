@@ -9,8 +9,8 @@ metrology-data-analysis = LSSTTD-783
 [ccs]
 org-lsst-ccs-subsystem-metrology-main = 1.4
 org-lsst-ccs-subsystem-metrology-gui = 1.4
-org-lsst-ccs-subsystem-teststand-main = 1.1.16
-org-lsst-ccs-subsystem-teststand-gui = 1.1.16
+org-lsst-ccs-subsystem-teststand-main = 1.1.17
+org-lsst-ccs-subsystem-teststand-gui = 1.1.17
 
 [dmstack]
 stack_dir = /home/ts5prod/miniconda2/
