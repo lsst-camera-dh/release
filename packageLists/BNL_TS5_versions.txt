@@ -4,7 +4,7 @@ harnessed-jobs = 0.4.6
 lcatr-harness = 0.10.0
 lcatr-schema = 0.5.2
 lcatr-modulefiles = 0.3.1
-metrology-data-analysis = LSSTTD-783
+metrology-data-analysis = "Snapshot of LSSTTD-783"
 
 [ccs]
 org-lsst-ccs-subsystem-metrology-main = 1.4
