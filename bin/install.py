@@ -249,7 +249,7 @@ export DATACAT_CONFIG=%s
             command = 'source ./setup.sh; python harnessed-jobs-%(hj_version)s/tests/setup_test.py' % locals()
             subprocess.call(command, shell=True, executable=self._executable)
             os.chdir(self.curdir)
-        except KeyError:
+        except (ConfigParser.NoSectionError, KeyError):
             pass
 
     def _ccs_download(self, package_name, package_version):
