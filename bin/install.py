@@ -1,7 +1,9 @@
 #!/usr/bin/env python
 from __future__ import print_function, absolute_import
 import os
+import glob
 import subprocess
+import warnings
 import ConfigParser
 
 class Parfile(dict):
@@ -26,6 +28,7 @@ class Parfile(dict):
             return value
 
 class Installer(object):
+    _executable = '/bin/bash'
     _github_org = 'https://github.com/lsst-camera-dh'
     def __init__(self, version_file, inst_dir='.',
                  hj_folders=('BNL_T03',), site='BNL'):
@@ -34,9 +37,11 @@ class Installer(object):
             self.inst_dir = os.path.abspath(inst_dir)
         self.hj_folders = hj_folders
         self.site = site
+        self._package_dirs = None
         self._stack_dir = None
+        self._datacat_pars = None
         self.curdir = os.path.abspath('.')
-        self.package_dirs = []
+        self.pars = Parfile(self.version_file, 'jh')
 
     def modules_install(self):
         url = 'http://sourceforge.net/projects/modules/files/Modules/modules-3.2.10/modules-3.2.10.tar.gz'
@@ -48,7 +53,7 @@ class Installer(object):
                              "make",
                              "make install",
                              "cd %(inst_dir)s"]) % locals()
-        subprocess.call(commands, shell=True, executable="/bin/bash")
+        subprocess.call(commands, shell=True, executable=self._executable)
 
     @staticmethod
     def github_download(package_name, version):
@@ -57,14 +62,29 @@ class Installer(object):
         commands = ["curl -L -O " + url,
                     "tar xzf %(version)s.tar.gz" % locals()]
         for command in commands:
-            subprocess.call(command, shell=True, executable="/bin/bash")
+            subprocess.call(command, shell=True,
+                            executable=Installer._executable)
 
     def lcatr_install(self, package_name):
         version = self.pars[package_name]
         self.github_download(package_name, version)
         inst_dir = self.inst_dir
         command = "cd %(package_name)s-%(version)s/; python setup.py install --prefix=%(inst_dir)s" % locals()
-        subprocess.call(command, shell=True, executable="/bin/bash")
+        subprocess.call(command, shell=True, executable=self._executable)
+
+    @property
+    def package_dirs(self):
+        if self._package_dirs is None:
+            self._package_dirs = {}
+            try:
+                pars = Parfile(self.version_file, 'packages')
+                for package, version in pars.items():
+                    package_dir = "%(package)s-%(version)s" % locals()
+                    self._package_dirs[package] = os.path.join(self.inst_dir,
+                                                               package_dir)
+            except ConfigParser.NoSectionError:
+                pass
+        return self._package_dirs
 
     @property
     def stack_dir(self):
@@ -76,78 +96,138 @@ class Installer(object):
                 pass
         return self._stack_dir
 
+    @property
+    def datacat_pars(self):
+        if self._datacat_pars is None:
+            try:
+                self._datacat_pars = Parfile(self.version_file, 'datacat')
+            except ConfigParser.NoSectionError:
+                pass
+        return self._datacat_pars
+
     def write_setup(self):
-        stack_dir = self.stack_dir
-        inst_dir = self.inst_dir
-        hj_version = self.pars['harnessed-jobs']
-        site = self.site
-        module_path = subprocess.check_output('ls -d %(inst_dir)s/lib/python*/site-packages' % locals(), shell=True).strip()
-        python_dirs = [os.path.join(x, 'python') for x in self.package_dirs]
-        python_dirs.extend(['${DATACATDIR}',
-                            '${HARNESSEDJOBSDIR}/python',
-                            module_path,
-                            '${PYTHONPATH}'])
-        python_path = ":".join(python_dirs)
-        bin_dirs = [os.path.join(x, 'bin') for x in self.package_dirs]
-        bin_dirs.extend(['${INST_DIR}/bin', '${PATH}'])
-        bin_path = ":".join(bin_dirs)
-        try:
-            datacat_pars = Parfile(self.version_file, 'datacat')
-            datacatdir = os.path.join(datacat_pars['datacatdir'])
-            datacat_config = datacat_pars['datacat_config']
-            python_configs = """export DATACATDIR=%(datacatdir)s/lib
-export DATACAT_CONFIG=%(datacat_config)s
-export PYTHONPATH=%(python_path)s""" % locals()
-        except ConfigParser.NoSectionError:
-            python_configs = "export PYTHONPATH=%(python_path)s" % locals()
-        contents = """export STACK_DIR=%(stack_dir)s
+        contents = "export INST_DIR=%s\n" % self.inst_dir
+        if self.stack_dir is not None:
+            contents += """export STACK_DIR=%s
 source ${STACK_DIR}/loadLSST.bash
-export INST_DIR=%(inst_dir)s
 export EUPS_PATH=${INST_DIR}/eups:${EUPS_PATH}
-setup eotest
-setup mysqlpython
-export VIRTUAL_ENV=${INST_DIR}
-source ${INST_DIR}/Modules/3.2.10/init/bash
-export HARNESSEDJOBSDIR=${INST_DIR}/harnessed-jobs-%(hj_version)s
-%(python_configs)s
-export PATH=%(bin_path)s
-export SITENAME=%(site)s
-export LCATR_SCHEMA_PATH=${HARNESSEDJOBSDIR}/schemas:${LCATR_SCHEMA_PATH}
-PS1="[jh]$ "
-""" % locals()
+""" % self.stack_dir
+
+        contents += self._eups_config()
+        contents += self._jh_config()
+        contents += self._schema_paths()
+        contents += self._package_env_vars()
+        contents += self._python_configs()
+        contents += 'PS1="[jh]$ "\n'
+
         output = open(os.path.join(self.inst_dir, 'setup.sh'), 'w')
         output.write(contents)
         output.close()
 
-    def jh(self, section='jh'):
+    def _eups_config(self):
         try:
-            self.pars = Parfile(self.version_file, section)
+            pars = Parfile(self.version_file, 'eups_packages')
         except ConfigParser.NoSectionError:
-            return
+            return ''
+        return '\n'.join(['setup %s' % package for package in pars]) + '\n'
+
+    def _jh_config(self):
+        bin_dirs = [os.path.join('${INST_DIR}', os.path.split(x)[-1], 'bin')
+                    for x in self.package_dirs.values()
+                    if os.path.isdir(os.path.join(x, 'bin'))]
+        bin_path = ":".join(bin_dirs + ['${INST_DIR}/bin', '${PATH}'])
+        hj_version = self.pars['harnessed-jobs']
+        site = self.site
+        return """export HARNESSEDJOBSDIR=${INST_DIR}/harnessed-jobs-%(hj_version)s
+export VIRTUAL_ENV=${INST_DIR}
+source ${INST_DIR}/Modules/3.2.10/init/bash
+export PATH=%(bin_path)s
+export SITENAME=%(site)s
+""" % locals()
+
+    def _schema_paths(self):
+        paths = []
+        for package, package_dir in self.package_dirs.items():
+            if not os.path.isdir(os.path.join(package_dir, 'schemas')):
+                continue
+            paths.append("${%s}/schemas" % self._env_var(package))
+        paths.extend(['${HARNESSEDJOBSDIR}/schemas', '${LCATR_SCHEMA_PATH}'])
+        return 'export LCATR_SCHEMA_PATH=' + ':'.join(paths) + '\n'
+
+    def _package_env_vars(self):
+        contents = ""
+        for package, package_dir in self.package_dirs.items():
+            subdir = os.path.split(package_dir.rstrip(os.path.sep))[-1]
+            env_var = self._env_var(package)
+            contents += ("export %s=${INST_DIR}/%s\n" % (env_var, subdir))
+        return contents
+
+    @staticmethod
+    def _env_var(package_name):
+        return package_name.replace('-', '').upper() + 'DIR'
+
+    def _module_path(self):
+        try:
+            module_path = glob.glob('%s/lib/python*/site-packages'
+                                    % self.inst_dir)[0][len(self.inst_dir):]
+            return os.path.join('${INST_DIR}', module_path.lstrip(os.path.sep))
+        except IndexError:
+            message = "%s/lib/python*/site-packages not found." % self.inst_dir
+            warnings.warn(message)
+            return ''
+
+    def _python_configs(self):
+        python_dirs = [os.path.join('${'+self._env_var(x)+'}', 'python')
+                       for x in self.package_dirs]
+        datacat_pars = self.datacat_pars
+        if datacat_pars is not None:
+            python_dirs.append('${DATACATDIR}')
+        python_dirs.extend(['${HARNESSEDJOBSDIR}/python', self._module_path(),
+                            '${PYTHONPATH}'])
+        python_configs = ''
+        if datacat_pars is not None:
+            python_configs += """export DATACATDIR=%s/lib
+export DATACAT_CONFIG=%s
+""" % (os.path.join(datacat_pars['datacatdir']), datacat_pars['datacat_config'])
+        python_configs += "export PYTHONPATH=%s\n" % ":".join(python_dirs)
+        return python_configs
+
+    def jh(self):
         os.chdir(self.inst_dir)
         self.modules_install()
         self.lcatr_install('lcatr-harness')
         self.lcatr_install('lcatr-schema')
         self.lcatr_install('lcatr-modulefiles')
         inst_dir = self.inst_dir
-        subprocess.call('ln -sf %(inst_dir)s/share/modulefiles %(inst_dir)s/Modules' % locals(), shell=True, executable="/bin/bash")
-        subprocess.call('touch `ls -d %(inst_dir)s/lib/python*/site-packages/lcatr`/__init__.py' % locals(), shell=True, executable="/bin/bash")
-        eotest_version = self.pars['eotest']
-        self.github_download('eotest', eotest_version)
-        stack_dir = self.stack_dir
-        commands = """source %(stack_dir)s/loadLSST.bash; mkdir -p %(inst_dir)s/eups/ups_db; export EUPS_PATH=%(inst_dir)s/eups:${EUPS_PATH}; cd eotest-%(eotest_version)s/; eups declare eotest %(eotest_version)s -r . -c; setup eotest; setup mysqlpython; scons opt=3""" % locals()
-        subprocess.call(commands, shell=True, executable="/bin/bash")
+        subprocess.call('ln -sf %(inst_dir)s/share/modulefiles %(inst_dir)s/Modules' % locals(), shell=True, executable=self._executable)
+        subprocess.call('touch `ls -d %(inst_dir)s/lib/python*/site-packages/lcatr`/__init__.py' % locals(), shell=True, executable=self._executable)
         hj_version = self.pars['harnessed-jobs']
         self.github_download('harnessed-jobs', hj_version)
         for folder in self.hj_folders:
-            subprocess.call('ln -sf %(inst_dir)s/harnessed-jobs-%(hj_version)s/%(folder)s/* %(inst_dir)s/share' % locals(), shell=True, executable="/bin/bash")
-        self.hj_package_installer()
+            subprocess.call('ln -sf %(inst_dir)s/harnessed-jobs-%(hj_version)s/%(folder)s/* %(inst_dir)s/share' % locals(), shell=True, executable=self._executable)
+        self.eups_package_installer()
+        self.package_installer()
         self.write_setup()
         os.chdir(self.curdir)
 
-    def hj_package_installer(self):
+    def eups_package_installer(self):
         try:
-            pars = Parfile(self.version_file, 'hj_packages')
+            pars = Parfile(self.version_file, 'eups_packages')
+        except ConfigParser.NoSectionError:
+            return
+        inst_dir = self.inst_dir
+        stack_dir = self.stack_dir.rstrip(os.path.sep)
+        ups_db_dir = '%(inst_dir)s/eups/ups_db' % locals()
+        if not os.path.isdir(ups_db_dir):
+            os.makedirs(ups_db_dir)
+        for package, version in pars.items():
+            self.github_download(package, version)
+            commands = """source %(stack_dir)s/loadLSST.bash; export EUPS_PATH=%(inst_dir)s/eups:${EUPS_PATH}; cd %(package)s-%(version)s/; eups declare %(package)s %(version)s -r . -c; setup %(package)s; scons opt=3""" % locals()
+            subprocess.call(commands, shell=True, executable=self._executable)
+
+    def package_installer(self):
+        try:
+            pars = Parfile(self.version_file, 'packages')
         except ConfigParser.NoSectionError:
             return
         inst_dir = self.inst_dir
@@ -157,15 +237,20 @@ PS1="[jh]$ "
             hj_dir = "%(inst_dir)s/%(package_dir)s/harnessed_jobs" % locals()
             if os.path.isdir(hj_dir):
                 command = 'ln -sf %(hj_dir)s/* %(inst_dir)s/share' % locals()
-                subprocess.call(command, shell=True, executable="/bin/bash")
-            self.package_dirs.append(os.path.join(inst_dir, package_dir))
+                subprocess.call(command, executable=self._executable,
+                                shell=True)
 
     def jh_test(self):
         os.chdir(self.inst_dir)
-        hj_version = self.pars['harnessed-jobs']
-        command = 'source ./setup.sh; python harnessed-jobs-%(hj_version)s/tests/setup_test.py' % locals()
-        subprocess.call(command, shell=True, executable="/bin/bash")
-        os.chdir(self.curdir)
+        try:
+            pars = Parfile(self.version_file, 'eups_packages')
+            pars['eotest']
+            hj_version = self.pars['harnessed-jobs']
+            command = 'source ./setup.sh; python harnessed-jobs-%(hj_version)s/tests/setup_test.py' % locals()
+            subprocess.call(command, shell=True, executable=self._executable)
+            os.chdir(self.curdir)
+        except (ConfigParser.NoSectionError, KeyError):
+            pass
 
     def _ccs_download(self, package_name, package_version):
 
@@ -184,11 +269,11 @@ PS1="[jh]$ "
             # - if it is a released version and it does not exist in the ccs install directory
             base_url = "http://dev.lsstcorp.org:8081/nexus/service/local/artifact/maven/redirect?r=ccs-maven2-public&g=org.lsst"
             command = 'wget "%(base_url)s&a=%(package_name)s&v=%(package_version)s&e=zip&c=dist" -O temp.zip' % locals()
-            subprocess.call(command, shell=True, executable="/bin/bash")
+            subprocess.call(command, shell=True, executable=self._executable)
             if os.path.isdir(subdir):
-                subprocess.call('rm -r %(subdir)s' % locals(), shell=True, executable="/bin/bash")
-            subprocess.call('unzip -uoqq temp.zip', shell=True, executable="/bin/bash")
-            subprocess.call('rm temp.zip', shell=True, executable="/bin/bash")
+                subprocess.call('rm -r %(subdir)s' % locals(), shell=True, executable=self._executable)
+            subprocess.call('unzip -uoqq temp.zip', shell=True, executable=self._executable)
+            subprocess.call('rm temp.zip', shell=True, executable=self._executable)
 
         self._ccs_symlink(package_name, subdir)
 
@@ -207,11 +292,11 @@ PS1="[jh]$ "
                                                            symlinkTarget))
                 createSymlink = True
                 subprocess.call('rm %(symlinkName)s' % locals(), shell=True,
-                                executable="/bin/bash")
+                                executable=self._executable)
 
         if createSymlink:
             subprocess.call('ln -sf %(symlinkTarget)s %(symlinkName)s'
-                            % locals(), shell=True, executable="/bin/bash")
+                            % locals(), shell=True, executable=self._executable)
 
     def ccs(self, args, section='ccs'):
 
