@@ -6,7 +6,7 @@ lcatr-modulefiles = 0.3.1
 
 [packages]
 metrology-data-analysis = 0.0.10
-offline-jobs = 0.0.16
+offline-jobs = 0.0.17
 
 [eups_packages]
 eotest = 0.0.18

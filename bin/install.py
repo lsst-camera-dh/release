@@ -359,7 +359,7 @@ export DATACAT_CONFIG=%s
             elif x.startswith(symlink_token):
                 symlink_map.update({x.replace(symlink_token, ''): pars[x]})
             else:
-                self._ccs_download(x, pars[x])
+                self._ccs_download(x, str(pars[x]))
 
         # Now create the executable symlinks in the distribution bin directory
         try:
