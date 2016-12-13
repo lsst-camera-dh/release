@@ -41,7 +41,10 @@ class Installer(object):
         self._stack_dir = None
         self._datacat_pars = None
         self.curdir = os.path.abspath('.')
-        self.pars = Parfile(self.version_file, 'jh')
+        try:
+            self.pars = Parfile(self.version_file, 'jh')
+        except ConfigParser.NoSectionError:
+            pass
 
     def modules_install(self):
         url = 'http://sourceforge.net/projects/modules/files/Modules/modules-3.2.10/modules-3.2.10.tar.gz'
