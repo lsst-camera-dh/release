@@ -1,5 +1,5 @@
 [jh]
-harnessed-jobs = 0.4.14
+harnessed-jobs = 0.4.15
 lcatr-harness = 0.10.0
 lcatr-schema = 0.5.2
 lcatr-modulefiles = 0.3.1
@@ -11,8 +11,8 @@ eotest = 0.0.17
 config_files = 0.0.12
 
 [ccs]
-org-lsst-ccs-subsystem-teststand-main = 1.1.19-SNAPSHOT
-org-lsst-ccs-subsystem-teststand-gui = 1.1.19-SNAPSHOT
+org-lsst-ccs-subsystem-teststand-main = 1.1.20-SNAPSHOT
+org-lsst-ccs-subsystem-teststand-gui = 1.1.20-SNAPSHOT
 org-lsst-ccs-subsystem-archon-main = 2.0.13
 org-lsst-ccs-subsystem-archon-gui = 2.0.13
 org-lsst-ccs-localdb-main = 2.0.1
