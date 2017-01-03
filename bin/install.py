@@ -118,8 +118,8 @@ export EUPS_PATH=${INST_DIR}/eups:${EUPS_PATH}
 
         contents += self._eups_config()
         contents += self._jh_config()
-        contents += self._schema_paths()
         contents += self._package_env_vars()
+        contents += self._schema_paths()
         contents += self._python_configs()
         contents += 'PS1="[jh]$ "\n'
 

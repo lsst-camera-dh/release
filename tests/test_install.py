@@ -25,6 +25,11 @@ class InstallTestCase(unittest.TestCase):
         command = 'source tmp/setup.sh; python -c "import siteUtils; import metUtils; import vendorFitsTranslators; import eotestUtils; import lsst.eotest.sensor"'
         self.assertEqual(subprocess.check_call(command, shell=True,
                                                executable='/bin/bash'), 0)
+        args = ('source tmp/setup.sh; python -c "import foobar"',)
+        kwds = dict(shell=True, executable='/bin/bash',
+                    stderr=subprocess.STDOUT)
+        self.assertRaises(subprocess.CalledProcessError,
+                          subprocess.check_output, *args, **kwds)
 
 if __name__ == '__main__':
     unittest.main()
