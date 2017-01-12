@@ -1,15 +1,17 @@
 [jh]
-harnessed-jobs = 0.4.13
+harnessed-jobs = 0.4.19
 lcatr-harness = 0.10.0
 lcatr-schema = 0.5.2
 lcatr-modulefiles = 0.3.1
 
 [eups_packages]
-eotest = 0.0.17
+eotest = 0.0.19
 
 [packages]
 eTraveler-clientAPI = 1.2.2
 config_files = 0.0.11
+camera-model = 0.0.1
+EO-analysis-jobs = 0.0.1
 
 [ccs]
 org-lsst-ccs-subsystem-ts8-main = 1.0.6-SNAPSHOT
