@@ -2,6 +2,7 @@
 from __future__ import print_function, absolute_import
 import os
 import glob
+import shutil
 import subprocess
 import warnings
 import ConfigParser
@@ -35,6 +36,8 @@ class Installer(object):
         self.version_file = os.path.abspath(version_file)
         if inst_dir is not None:
             self.inst_dir = os.path.abspath(inst_dir)
+        shutil.copy(self.version_file,
+                    os.path.join(self.inst_dir, 'installed_versions.txt'))
         self.hj_folders = hj_folders
         self.site = site
         self._package_dirs = None
