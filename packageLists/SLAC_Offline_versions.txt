@@ -7,6 +7,7 @@ lcatr-modulefiles = 0.3.1
 [packages]
 metrology-data-analysis = 0.0.10
 offline-jobs = 0.0.18
+eTraveler-clientAPI = 1.2.2
 
 [eups_packages]
 eotest = 0.0.18
