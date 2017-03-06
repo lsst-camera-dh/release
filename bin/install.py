@@ -196,7 +196,6 @@ export SITENAME=%(site)s
 export DATACAT_CONFIG=%s
 """ % (os.path.join(datacat_pars['datacatdir']), datacat_pars['datacat_config'])
         python_configs += "export PYTHONPATH=%s\n" % ":".join(python_dirs)
-        python_configs += "export MPLBACKEND=Agg\n"
         return python_configs
 
     def jh(self):
