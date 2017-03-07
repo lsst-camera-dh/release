@@ -36,8 +36,8 @@ class Installer(object):
         self.version_file = os.path.abspath(version_file)
         if inst_dir is not None:
             self.inst_dir = os.path.abspath(inst_dir)
-        shutil.copy(self.version_file,
-                    os.path.join(self.inst_dir, 'installed_versions.txt'))
+            shutil.copy(self.version_file,
+                        os.path.join(self.inst_dir, 'installed_versions.txt'))
         self.hj_folders = hj_folders
         self.site = site
         self._package_dirs = None
@@ -196,7 +196,6 @@ export SITENAME=%(site)s
 export DATACAT_CONFIG=%s
 """ % (os.path.join(datacat_pars['datacatdir']), datacat_pars['datacat_config'])
         python_configs += "export PYTHONPATH=%s\n" % ":".join(python_dirs)
-        python_configs += "export MPLBACKEND=Agg\n"
         return python_configs
 
     def jh(self):
