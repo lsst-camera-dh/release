@@ -51,6 +51,7 @@ export SITENAME=%s
                              '''export DATACATDIR=/afs/slac/u/gl/srs/datacat/dev/0.4/lib
 export DATACAT_CONFIG=/nfs/farm/g/lsst/u1/software/datacat/config.cfg
 export PYTHONPATH=${OFFLINEJOBSDIR}/python:${METROLOGYDATAANALYSISDIR}/python:${DATACATDIR}:${HARNESSEDJOBSDIR}/python::${PYTHONPATH}
+export MPLBACKEND=Agg
 ''')
 
         self.assertEqual(installer._package_env_vars(),

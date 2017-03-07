@@ -8,8 +8,8 @@ config_files = 0.0.7
 eTraveler-clientAPI = 1.1.0
 
 [ccs]
-org-lsst-ccs-subsystem-teststand-main = 1.1.16
-org-lsst-ccs-subsystem-teststand-gui = 1.1.16
+org-lsst-ccs-subsystem-teststand-main = 1.1.21-SNAPSHOT
+org-lsst-ccs-subsystem-teststand-gui = 1.1.21-SNAPSHOT
 org-lsst-ccs-subsystem-power-main = 1.0.1
 org-lsst-ccs-subsystem-power-gui = 1.0.1
 org-lsst-ccs-localdb-main = 2.0.1
