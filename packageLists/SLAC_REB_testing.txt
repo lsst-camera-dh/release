@@ -16,14 +16,22 @@ datacatdir = /afs/slac/u/gl/srs/datacat/dev/0.4
 datacat_config = /nfs/farm/g/lsst/u1/software/datacat/config.cfg
 
 [ccs]
-org-lsst-ccs-subsystem-rafts-main = 1.6.1
-org-lsst-ccs-subsystem-rafts-gui = 1.6.1
+org-lsst-ccs-subsystem-rafts-main = 1.7.4
+org-lsst-ccs-subsystem-rafts-gui = 1.7.4
+org-lsst-ccs-subsystem-power-main = 1.1.0
+org-lsst-ccs-subsystem-power-gui = 1.1.0
 org-lsst-ccs-localdb-main = 3.0.1
-org-lsst-ccs-subsystem-console = 4.0.1
+org-lsst-ccs-subsystem-console = 4.0.2
 #config_files = 0.0.7
 executable.Reb4Run = org-lsst-ccs-subsystem-rafts-main
+executable.Reb5Run = org-lsst-ccs-subsystem-rafts-main
+executable.Reb50Run = org-lsst-ccs-subsystem-rafts-main
+executable.Reb51Run = org-lsst-ccs-subsystem-rafts-main
+executable.Reb52Run = org-lsst-ccs-subsystem-rafts-main
 executable.CCS-Console = org-lsst-ccs-subsystem-rafts-gui
 executable.JythonConsole = org-lsst-ccs-subsystem-console
+executable.REBPower = org-lsst-ccs-subsystem-power-main
+executable.REBPSControlGui = org-lsst-ccs-subsystem-power-gui
 executable.ShellCommandConsole = org-lsst-ccs-subsystem-console
 executable.LocalRestServices = org-lsst-ccs-localdb-main
 executable.TrendingIngestModule = org-lsst-ccs-localdb-main
