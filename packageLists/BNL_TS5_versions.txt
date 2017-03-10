@@ -1,5 +1,5 @@
 [jh]
-harnessed-jobs = 0.4.11
+harnessed-jobs = 0.4.38
 lcatr-harness = 0.10.0
 lcatr-schema = 0.5.2
 lcatr-modulefiles = 0.3.1
@@ -13,10 +13,10 @@ metrology-data-analysis = 0.0.11
 config_files = 0.0.11
 
 [ccs]
-org-lsst-ccs-subsystem-metrology-main = 1.4
-org-lsst-ccs-subsystem-metrology-gui = 1.4
-org-lsst-ccs-subsystem-teststand-main = 1.1.21-SNAPSHOT
-org-lsst-ccs-subsystem-teststand-gui = 1.1.21-SNAPSHOT
+org-lsst-ccs-subsystem-metrology-main = 1.5
+org-lsst-ccs-subsystem-metrology-gui = 1.5
+org-lsst-ccs-subsystem-teststand-main = 1.1.21
+org-lsst-ccs-subsystem-teststand-gui = 1.1.21
 
 [dmstack]
 stack_dir = /home/ts5prod/miniconda2/
