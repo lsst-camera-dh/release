@@ -5,12 +5,12 @@ lcatr-schema = 0.5.2
 lcatr-modulefiles = 0.3.1
 
 [packages]
-metrology-data-analysis = 0.0.10
-offline-jobs = 0.0.18
+metrology-data-analysis = 0.0.12
+offline-jobs = 0.0.19
 eTraveler-clientAPI = 1.2.2
 
 [eups_packages]
-eotest = 0.0.18
+eotest = 0.0.21
 
 [dmstack]
 stack_dir = /nfs/farm/g/lsst/u1/software/redhat6-x86_64-64bit-gcc44/DMstack/v12_0
