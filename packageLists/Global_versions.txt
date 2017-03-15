@@ -3,29 +3,3 @@ eTraveler-dbSchema = 0.13.0
 eTraveler-frontEnd = 1.2.14.2
 eTraveler-travelerDefinition = 1.34
 dataPortal = 0.2.3
-
-[traveler]
-SR-MET-01 = v3
-SR-MET-02 = v3
-SR-MET-04 = v2
-SR-MET-05 = v1
-SR-MET-06 = v2
-
-SR-RCV-01 = v1
-SR-GEN-RCV-02 = v7
-
-SR-EOT-1 = v1
-SR-EOT-02 = v1
-
-ASPIC_batch_ingest = v1
-
-CR-WFS-RCV-01 v1
-CR-WFS-EOT-01 v1
-CR-WFS-MET-01 v1
-CR-WFS-RCV-02 v1
-
-NCR v3
-
-OGP-Scripts = 20160927
-
-
