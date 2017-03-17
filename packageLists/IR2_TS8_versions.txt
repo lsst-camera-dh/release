@@ -1,0 +1,38 @@
+[jh]
+harnessed-jobs = 0.4.38
+lcatr-harness = 0.10.0
+lcatr-schema = 0.5.2
+lcatr-modulefiles = 0.3.1
+config_files = 0.0.7
+eTraveler-clientAPI = 1.1.0
+
+[eups_packages]
+eotest = 0.0.17
+
+[packages]
+eTraveler-clientAPI = 1.2.2
+metrology-data-analysis = 0.0.11
+config_files = 0.0.11
+
+[ccs]
+org-lsst-ccs-subsystem-teststand-main = 1.1.22-SNAPSHOT
+org-lsst-ccs-subsystem-teststand-gui = 1.1.22-SNAPSHOT
+org-lsst-ccs-subsystem-power-main = 1.1.1-SNAPSHOT
+org-lsst-ccs-subsystem-power-gui = 1.1.1-SNAPSHOT
+org-lsst-ccs-localdb-main = 2.0.1
+org-lsst-ccs-subsystem-console = 3.0.1
+org-lsst-ccs-subsystem-metrology-main = 1.5
+org-lsst-ccs-subsystem-metrology-gui = 1.5
+symlink.ts = org-lsst-ccs-subsystem-teststand-main
+symlink.tsSim = org-lsst-ccs-subsystem-teststand-main
+symlink.power = org-lsst-ccs-subsystem-power-main
+symlink.powerSim = org-lsst-ccs-subsystem-power-main
+symlink.CCS-Console = org-lsst-ccs-subsystem-teststand-gui
+symlink.JythonConsole = org-lsst-ccs-subsystem-console
+symlink.ShellCommandConsole = org-lsst-ccs-subsystem-console
+symlink.LocalRestServices = org-lsst-ccs-localdb-main
+symlink.TrendingIngestModule = org-lsst-ccs-localdb-main
+
+[dmstack]
+stack_dir = /lsst/dh/software/centos7-gcc48/anaconda/py-2.7/envs/v12_0
+
