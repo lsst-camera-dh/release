@@ -13,6 +13,7 @@ eotest = 0.0.17
 eTraveler-clientAPI = 1.2.2
 metrology-data-analysis = 0.0.11
 config_files = 0.0.11
+jh-dev-tools = 0.0.1
 
 [ccs]
 org-lsst-ccs-subsystem-teststand-main = 1.1.22-SNAPSHOT
