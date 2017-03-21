@@ -18,3 +18,8 @@ jh-dev-tools = 0.0.1
 
 [dmstack]
 stack_dir = /lsst/dh/software/centos7-gcc48/anaconda/py-2.7/envs/v12_0
+
+[datacat]
+datacatdir = /lsst/dh/software/centos7-gcc48/dev/datacat/0.4
+datacat_config = /lsst/dh/software/centos7-gcc48/dev/datacat/config.cfg
+
