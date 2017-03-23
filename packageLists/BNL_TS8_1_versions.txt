@@ -1,6 +1,6 @@
 [jh]
 eotest = 0.0.17
-harnessed-jobs = 0.4.35
+harnessed-jobs = 0.4.40
 lcatr-harness = 0.10.0
 lcatr-schema = 0.5.2
 lcatr-modulefiles = 0.3.1
@@ -8,10 +8,10 @@ config_files = 0.0.7
 eTraveler-clientAPI = 1.1.0
 
 [ccs]
-org-lsst-ccs-subsystem-teststand-main = 1.1.22-SNAPSHOT
-org-lsst-ccs-subsystem-teststand-gui = 1.1.22-SNAPSHOT
-org-lsst-ccs-subsystem-power-main = 1.1.1-SNAPSHOT
-org-lsst-ccs-subsystem-power-gui = 1.1.1-SNAPSHOT
+org-lsst-ccs-subsystem-teststand-main = 1.1.22
+org-lsst-ccs-subsystem-teststand-gui = 1.1.22
+org-lsst-ccs-subsystem-power-main = 1.1.1
+org-lsst-ccs-subsystem-power-gui = 1.1.1
 org-lsst-ccs-localdb-main = 2.0.1
 org-lsst-ccs-subsystem-console = 3.0.1
 symlink.ts = org-lsst-ccs-subsystem-teststand-main
