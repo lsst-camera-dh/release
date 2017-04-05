@@ -14,7 +14,7 @@ camera-model = 0.0.5
 config_files = 0.0.12
 sequencer-files = 0.0.4
 jh-ccs-utils = 0.0.1
-IandT-jobs = 0.0.2-beta
+IandT-jobs = 0.0.2
 jh-dev-tools = 0.0.1
 
 [dmstack]
