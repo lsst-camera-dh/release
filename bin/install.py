@@ -31,6 +31,7 @@ class Parfile(dict):
 class Installer(object):
     _executable = '/bin/bash'
     _github_org = 'https://github.com/lsst-camera-dh'
+    _github_elec_org = 'https://github.com/lsst-camera-electronics'
     def __init__(self, version_file, inst_dir='.',
                  hj_folders=('BNL_T03',), site='BNL'):
         self.version_file = os.path.abspath(version_file)
@@ -63,7 +64,11 @@ class Installer(object):
 
     @staticmethod
     def github_download(package_name, version):
-        url = '/'.join((Installer._github_org, package_name, 'archive',
+        if  not package_name.startswith('REB_'):
+            url = '/'.join((Installer._github_org, package_name, 'archive',
+                        version + '.tar.gz'))
+        else:
+            url = '/'.join((Installer._github_elec_org, package_name, 'archive',
                         version + '.tar.gz'))
         commands = ["curl -L -O " + url,
                     "tar xzf %(version)s.tar.gz" % locals()]
