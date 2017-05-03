@@ -76,6 +76,22 @@ class Installer(object):
             subprocess.call(command, shell=True,
                             executable=Installer._executable)
 
+    @staticmethod
+    def github_clone(package_name, version):
+        if not version:
+            version = 'master'
+
+        dir_name = package_name+'-'+version
+        if os.path.exists(dir_name):
+            commands = ["cd " + dir_name, "git pull", "cd .."]
+        else:
+            commands = ['git clone --branch '+version+' '+'/'.join((Installer._github_org, package_name))+' '+dir_name]
+
+        subprocess.call(commands, shell=True,
+                            executable=Installer._executable)
+
+        Installer.ccs_symlink(package_name, dir_name)
+
     def lcatr_install(self, package_name):
         version = self.pars[package_name]
         self.github_download(package_name, version)
@@ -265,30 +281,40 @@ export DATACAT_CONFIG=%s
 
     def _ccs_download(self, package_name, package_version):
 
-        if not package_name.startswith('org-lsst'):
-            self.github_download(package_name,package_version)
-            return
+        # Determine the protocol to fetch the package by the prefix
+        github_clone = package_name.startswith('github.')
+        nexus_download = package_name.startswith('nexus.')
 
-        subdir = '-'.join((package_name, package_version))
-        isReleasedVersion = 'SNAPSHOT' not in package_version
+        # If no prefix is provided use _old_ mechanism
+        if not github_clone and not nexus_download :
+           github_clone = not package_name.startswith('org-lsst')
 
-        if isReleasedVersion and os.path.exists(subdir):
-            print("Skipping download of released package {} since it already exists.".format(subdir))
-        else:
-            # Download the CCS package only when necessary:
-            # - if it is a SNAPSHOT version
-            # - if it is a released version and it does not exist in the ccs install directory
-            base_url = "http://dev.lsstcorp.org:8081/nexus/service/local/artifact/maven/redirect?r=ccs-maven2-public&g=org.lsst"
-            command = 'wget "%(base_url)s&a=%(package_name)s&v=%(package_version)s&e=zip&c=dist" -O temp.zip' % locals()
-            subprocess.call(command, shell=True, executable=self._executable)
-            if os.path.isdir(subdir):
-                subprocess.call('rm -r %(subdir)s' % locals(), shell=True, executable=self._executable)
-            subprocess.call('unzip -uoqq temp.zip', shell=True, executable=self._executable)
-            subprocess.call('rm temp.zip', shell=True, executable=self._executable)
+        # If from github, clone the project
+        if github_clone:
+            package_name = package_name.replace('github.', '')
+            self.github_clone(package_name,package_version)
+        else :
+            package_name = package_name.replace('nexus.', '')
+            subdir = '-'.join((package_name, package_version))
+            is_released_version = 'SNAPSHOT' not in package_version
 
-        self._ccs_symlink(package_name, subdir)
+            if is_released_version and os.path.exists(subdir):
+                print("Skipping download of released package {} since it already exists.".format(subdir))
+            else:
+                # Download the CCS package only when necessary:
+                # - if it is a SNAPSHOT version
+                # - if it is a released version and it does not exist in the ccs install directory
+                base_url = "http://dev.lsstcorp.org:8081/nexus/service/local/artifact/maven/redirect?r=ccs-maven2-public&g=org.lsst"
+                command = 'wget "%(base_url)s&a=%(package_name)s&v=%(package_version)s&e=zip&c=dist" -O temp.zip' % locals()
+                subprocess.call(command, shell=True, executable=self._executable)
+                if os.path.isdir(subdir):
+                    subprocess.call('rm -r %(subdir)s' % locals(), shell=True, executable=self._executable)
+                subprocess.call('unzip -uoqq temp.zip', shell=True, executable=self._executable)
+                subprocess.call('rm temp.zip', shell=True, executable=self._executable)
+                self.ccs_symlink(package_name, subdir)
 
-    def _ccs_symlink(self, symlinkName, symlinkTarget):
+    @staticmethod
+    def ccs_symlink(symlinkName, symlinkTarget):
         createSymlink = False
         if not os.path.exists(symlinkName):
             #If the symlink does not exist, create it
@@ -303,11 +329,11 @@ export DATACAT_CONFIG=%s
                                                            symlinkTarget))
                 createSymlink = True
                 subprocess.call('rm %(symlinkName)s' % locals(), shell=True,
-                                executable=self._executable)
+                                executable=Installer._executable)
 
         if createSymlink:
             subprocess.call('ln -sf %(symlinkTarget)s %(symlinkName)s'
-                            % locals(), shell=True, executable=self._executable)
+                            % locals(), shell=True, executable=Installer._executable)
 
     def ccs(self, args, section='ccs'):
 
@@ -345,9 +371,9 @@ export DATACAT_CONFIG=%s
                 for arg in ccs_arguments:
                     install_file.write(arg+"\n")
             # Create a symbolic link to the package list file used to create this installation directory
-            self._ccs_symlink("packageList.txt", self.version_file)
+            self.ccs_symlink("packageList.txt", self.version_file)
             # Create a symbolic link to the install script used to create this installation directory
-            self._ccs_symlink("update.py", os.path.abspath(os.path.join(self.curdir,__file__)))
+            self.ccs_symlink("update.py", os.path.abspath(os.path.join(self.curdir,__file__)))
         try:
             pars = Parfile(self.version_file, section)
         except ConfigParser.NoSectionError:
@@ -381,12 +407,12 @@ export DATACAT_CONFIG=%s
         os.chdir('bin')
 
         for executable_name in executable_map:
-            self._ccs_symlink(executable_name, "../{}/bin/CCSbootstrap.sh".format(executable_map[executable_name]))
+            self.ccs_symlink(executable_name, "../{}/bin/CCSbootstrap.sh".format(executable_map[executable_name]))
 
         # Now create the symlinks from the top level of the distribution directory
         os.chdir('..')
         for symlink_name in symlink_map:
-            self._ccs_symlink(symlink_name, symlink_map[symlink_name])
+            self.ccs_symlink(symlink_name, symlink_map[symlink_name])
         os.chdir(self.curdir)
 
 if __name__ == '__main__':
