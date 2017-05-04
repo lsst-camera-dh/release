@@ -2,10 +2,11 @@ import sys
 import warnings
 import unittest
 sys.path.insert(0, '../bin')
-from install import Parfile, Installer
+from utilities import Parfile, make_env_var
+from jh_install import JhInstaller
 
-class InstallerTestCase(unittest.TestCase):
-    "TestCase class for Installer class."
+class JhInstallerTestCase(unittest.TestCase):
+    "TestCase class for JhInstaller class."
 
     def setUp(self):
         self.versions_txt = 'test_install_versions.txt'
@@ -23,14 +24,14 @@ class InstallerTestCase(unittest.TestCase):
         eups_pars = Parfile(self.versions_txt, 'eups_packages')
         self.assertEqual(eups_pars['eotest'], '0.0.18')
 
-    def test_Installer_methods(self):
-        "Test various methods of the Installer class."
-        installer = Installer(self.versions_txt, site=self.site)
+    def test_JhInstaller_methods(self):
+        "Test various methods of the JhInstaller class."
+        installer = JhInstaller(self.versions_txt, site=self.site)
 
         self.assertEqual(installer.stack_dir, '/nfs/farm/g/lsst/u1/software/redhat6-x86_64-64bit-gcc44/DMstack/v12_0')
 
         package_name = 'metrology-data-analysis'
-        self.assertEqual(installer._env_var(package_name),
+        self.assertEqual(make_env_var(package_name),
                          'METROLOGYDATAANALYSISDIR')
 
         self.assertEqual(installer._eups_config(), 'setup eotest\n')
@@ -51,7 +52,6 @@ export SITENAME=%s
                              '''export DATACATDIR=/afs/slac/u/gl/srs/datacat/dev/0.4/lib
 export DATACAT_CONFIG=/nfs/farm/g/lsst/u1/software/datacat/config.cfg
 export PYTHONPATH=${OFFLINEJOBSDIR}/python:${METROLOGYDATAANALYSISDIR}/python:${DATACATDIR}:${HARNESSEDJOBSDIR}/python::${PYTHONPATH}
-export MPLBACKEND=Agg
 ''')
 
         self.assertEqual(installer._package_env_vars(),
