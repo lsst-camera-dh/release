@@ -13,7 +13,7 @@ eTraveler-clientAPI = 1.2.2
 eotest = 0.0.25
 
 [dmstack]
-stack_dir = /lsst/dh/software/centos7-gcc48/anaconda/py-2.7-4.3.14/envs/v13_0
+stack_dir = /nfs/farm/g/lsst/u1/software/redhat6-x86_64-64bit-gcc44/DMstack/v13_0
 
 [datacat]
 datacatdir = /afs/slac/u/gl/srs/datacat/dev/0.4
