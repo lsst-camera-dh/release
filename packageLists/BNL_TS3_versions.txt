@@ -9,7 +9,7 @@ eotest = 0.0.24
 
 [packages]
 eTraveler-clientAPI = 1.2.2
-config_files = 0.0.12
+config_files = 0.0.14
 
 [ccs]
 org-lsst-ccs-subsystem-teststand-main = 1.1.22
