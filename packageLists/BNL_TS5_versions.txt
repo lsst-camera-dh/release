@@ -1,16 +1,16 @@
 [jh]
-harnessed-jobs = 0.4.38
+harnessed-jobs = 0.4.64
 lcatr-harness = 0.10.0
 lcatr-schema = 0.5.2
 lcatr-modulefiles = 0.3.1
 
 [eups_packages]
-eotest = 0.0.17
+eotest = 0.0.24
 
 [packages]
 eTraveler-clientAPI = 1.2.2
 metrology-data-analysis = 0.0.11
-config_files = 0.0.11
+config_files = 0.0.14
 
 [ccs]
 org-lsst-ccs-subsystem-metrology-main = 1.5
