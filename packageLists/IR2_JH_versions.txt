@@ -19,7 +19,7 @@ jh-dev-tools = 0.0.1
 EO-analysis-jobs = 0.0.8
 
 [dmstack]
-stack_dir = /lsst/dh/software/centos7-gcc48/anaconda/py-2.7/envs/v12_0
+stack_dir = /lsst/dh/software/centos7-gcc48/anaconda/py-2.7-4.3.14/envs/v13_0
 
 [datacat]
 datacatdir = /lsst/dh/software/centos7-gcc48/dev/datacat/0.4

@@ -10,10 +10,10 @@ offline-jobs = 0.0.25
 eTraveler-clientAPI = 1.2.2
 
 [eups_packages]
-eotest = 0.0.21
+eotest = 0.0.25
 
 [dmstack]
-stack_dir = /nfs/farm/g/lsst/u1/software/redhat6-x86_64-64bit-gcc44/DMstack/v12_0
+stack_dir = /nfs/farm/g/lsst/u1/software/redhat6-x86_64-64bit-gcc44/DMstack/v13_0
 
 [datacat]
 datacatdir = /afs/slac/u/gl/srs/datacat/dev/0.4
