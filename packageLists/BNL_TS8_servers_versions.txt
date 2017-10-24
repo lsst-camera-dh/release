@@ -15,9 +15,9 @@ EO-analysis-jobs = 0.0.6
 sequencer-files = 0.1.1
 
 [ccs]
-org-lsst-ccs-subsystem-ts8-main = 1.1.4
-org-lsst-ccs-subsystem-ts8-gui = 1.1.4
-org-lsst-ccs-localdb-main = 2.0.1
+org-lsst-ccs-subsystem-ts8-main = 1.1.5
+org-lsst-ccs-subsystem-ts8-gui = 1.1.5
+org-lsst-ccs-localdb-main = 3.0.7
 symlink.ts8 = org-lsst-ccs-subsystem-ts8-main
 symlink.ts8Sim = org-lsst-ccs-subsystem-ts8-main
 symlink.CCS-Console = org-lsst-ccs-subsystem-ts8-gui
