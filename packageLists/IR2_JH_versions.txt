@@ -16,7 +16,7 @@ sequencer-files = 0.1.0
 jh-ccs-utils = 0.0.6
 IandT-jobs = 0.1.1
 jh-dev-tools = 0.0.1
-EO-analysis-jobs = 0.0.8
+EO-analysis-jobs = 0.0.9
 
 [dmstack]
 stack_dir = /lsst/dh/software/centos7-gcc48/anaconda/py-2.7/envs/v12_0
