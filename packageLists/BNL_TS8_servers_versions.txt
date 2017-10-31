@@ -5,13 +5,13 @@ lcatr-schema = 0.5.2
 lcatr-modulefiles = 0.3.1
 
 [eups_packages]
-eotest = 0.0.24
+eotest = 0.0.28
 
 [packages]
 eTraveler-clientAPI = 1.2.2
 config_files = 0.0.13
 camera-model = 0.0.5
-EO-analysis-jobs = 0.0.6
+EO-analysis-jobs = 0.0.9
 sequencer-files = 0.1.2
 
 [ccs]
