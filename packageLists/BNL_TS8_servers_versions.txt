@@ -12,7 +12,7 @@ eTraveler-clientAPI = 1.2.2
 config_files = 0.0.15
 camera-model = 0.0.5
 EO-analysis-jobs = 0.0.9
-sequencer-files = 0.1.3
+sequencer-files = 0.1.6
 
 [ccs]
 org-lsst-ccs-subsystem-ts8-main = 1.1.9
