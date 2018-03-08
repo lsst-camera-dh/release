@@ -305,7 +305,7 @@ export DATACAT_CONFIG=%s
                 # - if it is a SNAPSHOT version
                 # - if it is a released version and it does not exist in the ccs install directory
                 base_url = "http://dev.lsstcorp.org:8081/nexus/service/local/artifact/maven/redirect?r=ccs-maven2-public&g=org.lsst"
-                command = 'wget "%(base_url)s&a=%(package_name)s&v=%(package_version)s&e=zip&c=dist" -O temp.zip' % locals()
+                command = 'wget --progress=dot:mega "%(base_url)s&a=%(package_name)s&v=%(package_version)s&e=zip&c=dist" -O temp.zip' % locals()
                 subprocess.call(command, shell=True, executable=self._executable)
                 if os.path.isdir(subdir):
                     subprocess.call('rm -r %(subdir)s' % locals(), shell=True, executable=self._executable)
