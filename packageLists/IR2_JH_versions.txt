@@ -5,7 +5,7 @@ lcatr-schema = 0.5.2
 lcatr-modulefiles = 0.3.1
 
 [eups_packages]
-eotest = 0.0.29
+eotest = 0.0.31
 
 [packages]
 eTraveler-clientAPI = 1.7.1
@@ -13,9 +13,9 @@ metrology-data-analysis = 0.0.14
 camera-model = 0.0.7
 config_files = 0.0.12
 jh-ccs-utils = 0.0.8
-IandT-jobs = 0.1.4
+IandT-jobs = 0.1.5
 jh-dev-tools = 0.0.1
-EO-analysis-jobs = 0.0.9
+EO-analysis-jobs = 0.0.12
 
 [dmstack]
 stack_dir = /lsst/dh/software/centos7-gcc48/anaconda/py-2.7/envs/v12_0
