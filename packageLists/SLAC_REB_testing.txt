@@ -6,7 +6,7 @@ lcatr-modulefiles = 0.3.1
 
 [packages]
 REB-testing = 0.1.1
-eTraveler-clientAPI = 1.2.2
+eTraveler-clientAPI = 1.7.1
 
 [dmstack]
 stack_dir = /nfs/farm/g/lsst/u1/software/redhat6-x86_64-64bit-gcc44/DMstack/v12_0
