@@ -13,7 +13,7 @@ metrology-data-analysis = 0.0.14
 camera-model = 0.0.7
 config_files = 0.0.12
 jh-ccs-utils = 0.0.10
-IandT-jobs = 0.1.6
+IandT-jobs = 0.1.7
 jh-dev-tools = 0.0.1
 EO-analysis-jobs = 0.0.12
 
@@ -23,4 +23,3 @@ stack_dir = /lsst/dh/software/centos7-gcc48/anaconda/py-2.7/envs/v12_0
 [datacat]
 datacatdir = /lsst/dh/software/centos7-gcc48/dev/datacat/0.4
 datacat_config = /lsst/dh/software/centos7-gcc48/dev/datacat/config.cfg
-
