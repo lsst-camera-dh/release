@@ -2,7 +2,7 @@
 harnessed-jobs = 0.4.66
 lcatr-harness = 0.16.0
 lcatr-schema = 0.6.0
-lcatr-modulefiles = 0.3.1
+lcatr-modulefiles = 0.4.0
 
 [eups_packages]
 eotest = 0.1.0
