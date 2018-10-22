@@ -1,24 +1,24 @@
 [jh]
 harnessed-jobs = 0.4.66
-lcatr-harness = 0.15.1
-lcatr-schema = 0.5.2
-lcatr-modulefiles = 0.3.1
+lcatr-harness = 0.16.0
+lcatr-schema = 0.6.0
+lcatr-modulefiles = 0.4.0
 
 [eups_packages]
-eotest = 0.0.31
+eotest = 0.1.0
 
 [packages]
 eTraveler-clientAPI = 1.7.1
 metrology-data-analysis = 0.0.14
-camera-model = 0.0.7
+camera-model = 0.1.1
 config_files = 0.0.12
-jh-ccs-utils = 0.0.11
-IandT-jobs = 0.1.8
-jh-dev-tools = 0.0.1
-EO-analysis-jobs = 0.0.12
+jh-ccs-utils = 0.1.1
+IandT-jobs = 0.1.9
+jh-dev-tools = 0.1.0
+EO-analysis-jobs = 0.1.0
 
 [dmstack]
-stack_dir = /lsst/dh/software/centos7-gcc48/anaconda/py-2.7/envs/v12_0
+stack_dir = /lsst/dh/software/centos7-gcc48/stack/v16_py3
 
 [datacat]
 datacatdir = /lsst/dh/software/centos7-gcc48/dev/datacat/0.4

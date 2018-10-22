@@ -5,12 +5,15 @@ import glob
 import shutil
 import subprocess
 import warnings
-import ConfigParser
+try:
+    import ConfigParser as configparser
+except ImportError:
+    import configparser
 
 class Parfile(dict):
     def __init__(self, infile, section):
         super(Parfile, self).__init__()
-        parser = ConfigParser.ConfigParser()
+        parser = configparser.ConfigParser()
         parser.optionxform = str
         parser.read(infile)
         for key, value in parser.items(section):
@@ -32,13 +35,14 @@ class Installer(object):
     _executable = '/bin/bash'
     _github_org = 'https://github.com/lsst-camera-dh'
     _github_elec_org = 'https://github.com/lsst-camera-electronics'
-    def __init__(self, version_file, inst_dir='.',
+    def __init__(self, version_file, inst_dir='.', python_exec='python',
                  hj_folders=('BNL_T03',), site='BNL'):
         self.version_file = os.path.abspath(version_file)
         if inst_dir is not None:
             self.inst_dir = os.path.abspath(inst_dir)
             shutil.copy(self.version_file,
                         os.path.join(self.inst_dir, 'installed_versions.txt'))
+        self.python_exec = python_exec
         self.hj_folders = hj_folders
         self.site = site
         self._package_dirs = None
@@ -47,7 +51,7 @@ class Installer(object):
         self.curdir = os.path.abspath('.')
         try:
             self.pars = Parfile(self.version_file, 'jh')
-        except ConfigParser.NoSectionError:
+        except configparser.NoSectionError:
             pass
 
     def modules_install(self):
@@ -96,7 +100,8 @@ class Installer(object):
         version = self.pars[package_name]
         self.github_download(package_name, version)
         inst_dir = self.inst_dir
-        command = "cd %(package_name)s-%(version)s/; python setup.py install --prefix=%(inst_dir)s" % locals()
+        python_exec = self.python_exec
+        command = "cd %(package_name)s-%(version)s/; %(python_exec)s setup.py install --prefix=%(inst_dir)s" % locals()
         subprocess.call(command, shell=True, executable=self._executable)
 
     @property
@@ -109,7 +114,7 @@ class Installer(object):
                     package_dir = "%(package)s-%(version)s" % locals()
                     self._package_dirs[package] = os.path.join(self.inst_dir,
                                                                package_dir)
-            except ConfigParser.NoSectionError:
+            except configparser.NoSectionError:
                 pass
         return self._package_dirs
 
@@ -119,7 +124,7 @@ class Installer(object):
             try:
                 pars = Parfile(self.version_file, 'dmstack')
                 self._stack_dir = pars['stack_dir']
-            except ConfigParser.NoSectionError:
+            except configparser.NoSectionError:
                 pass
         return self._stack_dir
 
@@ -128,7 +133,7 @@ class Installer(object):
         if self._datacat_pars is None:
             try:
                 self._datacat_pars = Parfile(self.version_file, 'datacat')
-            except ConfigParser.NoSectionError:
+            except configparser.NoSectionError:
                 pass
         return self._datacat_pars
 
@@ -154,7 +159,7 @@ export EUPS_PATH=${INST_DIR}/eups:${EUPS_PATH}
     def _eups_config(self):
         try:
             pars = Parfile(self.version_file, 'eups_packages')
-        except ConfigParser.NoSectionError:
+        except configparser.NoSectionError:
             return ''
         return '\n'.join(['setup %s' % package for package in pars]) + '\n'
 
@@ -240,7 +245,7 @@ export DATACAT_CONFIG=%s
     def eups_package_installer(self):
         try:
             pars = Parfile(self.version_file, 'eups_packages')
-        except ConfigParser.NoSectionError:
+        except configparser.NoSectionError:
             return
         inst_dir = self.inst_dir
         stack_dir = self.stack_dir.rstrip(os.path.sep)
@@ -255,7 +260,7 @@ export DATACAT_CONFIG=%s
     def package_installer(self):
         try:
             pars = Parfile(self.version_file, 'packages')
-        except ConfigParser.NoSectionError:
+        except configparser.NoSectionError:
             return
         inst_dir = self.inst_dir
         for package, version in pars.items():
@@ -276,7 +281,7 @@ export DATACAT_CONFIG=%s
             command = 'source ./setup.sh; python harnessed-jobs-%(hj_version)s/tests/setup_test.py' % locals()
             subprocess.call(command, shell=True, executable=self._executable)
             os.chdir(self.curdir)
-        except (ConfigParser.NoSectionError, KeyError):
+        except (configparser.NoSectionError, KeyError):
             pass
 
     def _ccs_download(self, package_name, package_version):
@@ -376,7 +381,7 @@ export DATACAT_CONFIG=%s
             self.ccs_symlink("update.py", os.path.abspath(os.path.join(self.curdir,__file__)))
         try:
             pars = Parfile(self.version_file, section)
-        except ConfigParser.NoSectionError:
+        except configparser.NoSectionError:
             return
 
         # Loop over the content of the [ccs] section to find either
@@ -426,6 +431,7 @@ if __name__ == '__main__':
     parser.add_argument('--site', type=str, default='SLAC',
                         help='Site (SLAC, BNL, etc.)')
     parser.add_argument('--hj_folders', type=str, default="SLAC")
+    parser.add_argument('--python_exec', type=str, default='python')
     parser.add_argument('--ccs_inst_dir', type=str, default=None)
     parser.add_argument('--dev', action='store_true')
 
@@ -440,11 +446,12 @@ if __name__ == '__main__':
     args = parser.parse_args(installerArguments)
 
     installer = Installer(args.version_file, inst_dir=args.inst_dir,
+                          python_exec=args.python_exec,
                           hj_folders=args.hj_folders.split(), site=args.site)
 
     if args.inst_dir is not None:
         installer.jh()
-        installer.jh_test()
+        #installer.jh_test()
 
     if args.ccs_inst_dir is not None:
         installer.ccs(args)
