@@ -9,22 +9,22 @@ eotest = 0.0.31
 
 [packages]
 eTraveler-clientAPI = 1.7.1
-config_files = 0.0.13
+config_files = 0.0.15
 
 [ccs]
 org-lsst-ccs-subsystem-teststand-main = 1.4.6-dev
 org-lsst-ccs-subsystem-teststand-gui = 1.4.6-dev
 org-lsst-ccs-subsystem-power-main = 1.5.2
 org-lsst-ccs-subsystem-power-gui = 1.5.2
-org-lsst-ccs-localdb-main = 3.0.7
-org-lsst-ccs-subsystem-console = 3.0.1
+org-lsst-ccs-localdb-main = 4.0.8-3
+org-lsst-ccs-subsystem-console = 5.2.1-SNAPSHOT
 symlink.ts = org-lsst-ccs-subsystem-teststand-main
 symlink.tsSim = org-lsst-ccs-subsystem-teststand-main
 symlink.power = org-lsst-ccs-subsystem-power-main
 symlink.powerSim = org-lsst-ccs-subsystem-power-main
-symlink.CCS-Console = org-lsst-ccs-subsystem-teststand-gui
+symlink.ccs-console = org-lsst-ccs-subsystem-teststand-gui
 symlink.JythonConsole = org-lsst-ccs-subsystem-console
-symlink.ShellCommandConsole = org-lsst-ccs-subsystem-console
+symlink.ccs-shell = org-lsst-ccs-power-main
 symlink.LocalRestServices = org-lsst-ccs-localdb-main
 symlink.TrendingIngestModule = org-lsst-ccs-localdb-main
 
