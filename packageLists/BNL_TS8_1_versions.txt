@@ -23,10 +23,11 @@ symlink.tsSim = org-lsst-ccs-subsystem-teststand-main
 symlink.power = org-lsst-ccs-subsystem-power-main
 symlink.powerSim = org-lsst-ccs-subsystem-power-main
 symlink.ccs-console = org-lsst-ccs-subsystem-teststand-gui
-symlink.JythonConsole = org-lsst-ccs-subsystem-console
+symlink.jython-server = org-lsst-ccs-subsystem-console
 symlink.ccs-shell = org-lsst-ccs-power-main
-symlink.LocalRestServices = org-lsst-ccs-localdb-main
-symlink.TrendingIngestModule = org-lsst-ccs-localdb-main
+symlink.ccs-script = org-lsst-ccs-power-main
+symlink.rest-server = org-lsst-ccs-localdb-main
+symlink.localdb = org-lsst-ccs-localdb-main
 
 [dmstack]
 stack_dir = /home/ts8prod/miniconda2/

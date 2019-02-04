@@ -20,11 +20,13 @@ org-lsst-ccs-subsystem-ts8-gui = 1.1.15-SNAPSHOT
 org-lsst-ccs-localdb-main = 4.0.8-3
 symlink.ts8 = org-lsst-ccs-subsystem-ts8-main
 symlink.ts8Sim = org-lsst-ccs-subsystem-ts8-main
-symlink.CCS-Console = org-lsst-ccs-subsystem-ts8-gui
-symlink.JythonConsole = org-lsst-ccs-subsystem-ts8-main
+symlink.ccs-console = org-lsst-ccs-subsystem-ts8-gui
+symlink.jython-server = org-lsst-ccs-subsystem-ts8-main
 symlink.ShellCommandConsole = org-lsst-ccs-subsystem-ts8-main
-symlink.LocalRestServices = org-lsst-ccs-localdb-main
-symlink.TrendingIngestModule = org-lsst-ccs-localdb-main
+symlink.ccs-shell = org-lsst-ccs-subsystem-ts8-main
+symlink.ccs-script = org-lsst-ccs-subsystem-ts8-main
+symlink.rest-server = org-lsst-ccs-localdb-main
+symlink.localdb = org-lsst-ccs-localdb-main
 
 [dmstack]
 stack_dir = /home/ts8prod/miniconda2/
