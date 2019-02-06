@@ -1,5 +1,5 @@
 [jh]
-harnessed-jobs = 0.4.90
+harnessed-jobs = 0.4.91
 lcatr-harness = 0.13.0
 lcatr-schema = 0.5.2
 lcatr-modulefiles = 0.3.1
