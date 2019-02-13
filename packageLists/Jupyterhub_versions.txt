@@ -5,17 +5,17 @@ lcatr-schema = 0.6.0
 lcatr-modulefiles = 0.4.0
 
 [eups_packages]
-eotest = 0.1.0
+eotest = 0.1.2
 
 [packages]
 eTraveler-clientAPI = 1.7.1
 metrology-data-analysis = 0.0.14
-camera-model = 0.1.1
+camera-model = 0.1.2
 config_files = 0.0.12
-jh-ccs-utils = 0.1.1
-IandT-jobs = 0.1.9
+jh-ccs-utils = 0.1.3
+IandT-jobs = 0.1.12
 jh-dev-tools = 0.1.0
-EO-analysis-jobs = 0.1.0
+EO-analysis-jobs = 0.1.3
 
 [dmstack]
 stack_dir = /opt/lsst/software/stack
