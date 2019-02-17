@@ -11,8 +11,8 @@ eotest = 0.1.0
 eTraveler-clientAPI = 1.7.1
 camera-model = 0.1.1
 config_files = 0.0.12
-jh-ccs-utils = 0.1.1
-CR-jobs = 1.0.0
+jh-cr-ccs-utils = 1.0.0
+CR-jobs = 1.0.1
 jh-dev-tools = 0.1.0
 EO-analysis-jobs = 0.1.0
 
