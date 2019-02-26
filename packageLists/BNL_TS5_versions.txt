@@ -1,23 +1,24 @@
 [jh]
-harnessed-jobs = 0.4.64
-lcatr-harness = 0.10.0
+harnessed-jobs = 0.4.91
+lcatr-harness = 0.13.0
 lcatr-schema = 0.5.2
 lcatr-modulefiles = 0.3.1
 
 [eups_packages]
-eotest = 0.0.24
+eotest = 0.0.31
 
 [packages]
-eTraveler-clientAPI = 1.2.2
+eTraveler-clientAPI = 1.7.1
+config_files = 0.0.15
 metrology-data-analysis = 0.0.11
-config_files = 0.0.14
 
 [ccs]
-org-lsst-ccs-subsystem-metrology-main = 1.5
-org-lsst-ccs-subsystem-metrology-gui = 1.5
-org-lsst-ccs-subsystem-teststand-main = 1.1.21
-org-lsst-ccs-subsystem-teststand-gui = 1.1.21
+org-lsst-ccs-subsystem-teststand-main = 1.4.6-dev
+org-lsst-ccs-subsystem-teststand-gui = 1.4.6-dev
+symlink.ts = org-lsst-ccs-subsystem-teststand-main
+symlink.tsSim = org-lsst-ccs-subsystem-teststand-main
+org-lsst-ccs-subsystem-metrology-main = 1.6.5
+org-lsst-ccs-subsystem-metrology-gui = 1.6.5
 
 [dmstack]
 stack_dir = /home/ts5prod/miniconda2/
-
