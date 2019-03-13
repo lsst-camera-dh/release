@@ -1,5 +1,5 @@
 [jh]
-harnessed-jobs = 0.4.90
+harnessed-jobs = 0.4.93
 lcatr-harness = 0.16.0
 lcatr-schema = 0.6.0
 lcatr-modulefiles = 0.4.0
@@ -12,7 +12,7 @@ eTraveler-clientAPI = 1.7.1
 camera-model = 0.1.1
 config_files = 0.0.12
 jh-cr-ccs-utils = 1.0.0
-CR-jobs = 1.0.1
+CR-jobs = 1.0.2
 jh-dev-tools = 0.1.0
 EO-analysis-jobs = 0.1.0
 
