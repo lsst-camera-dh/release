@@ -12,10 +12,10 @@ cr-eotest = 1.0.3
 eTraveler-clientAPI = 1.7.1
 cr-camera-model = 1.0.0
 config_files = 1.0.0
-jh-cr-ccs-utils = 1.0.1
+jh-cr-ccs-utils = 1.0.2
 CR-jobs = 1.0.3
 jh-dev-tools = 0.1.0
-cr-EO-analysis-jobs = 1.0.2
+cr-EO-analysis-jobs = 1.0.3
 
 [dmstack]
 stack_dir = /lsst/dh/software/centos7-gcc48/stack/v16_py3
