@@ -8,12 +8,12 @@ lcatr-modulefiles = 0.4.0
 eotest = 0.0.31
 
 [packages]
-cr-eotest = 1.0.4
+cr-eotest = 1.0.5
 eTraveler-clientAPI = 1.7.1
 cr-camera-model = 1.0.0
 config_files = 1.0.0
-jh-cr-ccs-utils = 1.0.3
-CR-jobs = 1.0.4
+jh-cr-ccs-utils = 1.0.4
+CR-jobs = 1.0.5
 jh-dev-tools = 0.1.0
 cr-EO-analysis-jobs = 1.0.4
 
