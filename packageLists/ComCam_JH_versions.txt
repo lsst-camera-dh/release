@@ -1,0 +1,24 @@
+[jh]
+harnessed-jobs = 0.4.93
+lcatr-harness = 0.16.0
+lcatr-schema = 0.6.0
+lcatr-modulefiles = 0.4.0
+
+[eups_packages]
+eotest = 0.1.2
+
+[packages]
+camera-model = 0.1.2
+jh-ccs-utils = 0.1.3
+jh-dev-tools = 0.1.0
+EO-analysis-jobs = 0.1.3
+eTraveler-clientAPI = 1.7.1
+config_files = 1.0.1
+comcam-jobs = 1.0.0
+
+[dmstack]
+stack_dir = /lsst/dh/software/centos7-gcc48/stack/v16_py3
+
+[datacat]
+datacatdir = /lsst/dh/software/centos7-gcc48/dev/datacat/0.4
+datacat_config = /lsst/dh/software/centos7-gcc48/dev/datacat/config.cfg
