@@ -13,7 +13,7 @@ eTraveler-clientAPI = 1.7.1
 cr-camera-model = 1.0.0
 config_files = 1.0.1
 jh-cr-ccs-utils = 1.0.4
-CR-jobs = 1.0.5
+CR-jobs = 1.0.6
 jh-dev-tools = 0.1.0
 cr-EO-analysis-jobs = 1.0.4
 
