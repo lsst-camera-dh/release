@@ -5,17 +5,17 @@ lcatr-schema = 0.7.0
 lcatr-modulefiles = 0.4.0
 
 [eups_packages]
-eotest = 0.1.4
+eotest = 0.1.5
 
 [packages]
 eTraveler-clientAPI = 1.7.1
 metrology-data-analysis = 0.0.14
 camera-model = 0.1.2
 config_files = 0.0.12
-jh-ccs-utils = 0.1.4
+jh-ccs-utils = 0.1.5
 IandT-jobs = 0.2.0
 jh-dev-tools = 0.1.0
-EO-analysis-jobs = 0.1.5
+EO-analysis-jobs = 0.1.6
 
 [dmstack]
 stack_dir = /lsst/dh/software/centos7-gcc48/stack/v17_gcc7
