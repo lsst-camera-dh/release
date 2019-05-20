@@ -143,6 +143,7 @@ class Installer(object):
             contents += """export STACK_DIR=%s
 source ${STACK_DIR}/loadLSST.bash
 export EUPS_PATH=${INST_DIR}/eups:${EUPS_PATH}
+setup obs_lsst
 """ % self.stack_dir
 
         contents += self._eups_config()
