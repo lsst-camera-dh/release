@@ -8,6 +8,7 @@ lcatr-modulefiles = 0.4.0
 eotest = 0.1.7
 
 [packages]
+sequencer-files = 0.2.0
 eTraveler-clientAPI = 1.7.1
 metrology-data-analysis = 0.0.14
 camera-model = 0.1.3
