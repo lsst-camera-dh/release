@@ -151,6 +151,7 @@ setup obs_lsst
         contents += self._package_env_vars()
         contents += self._schema_paths()
         contents += self._python_configs()
+        contents += "export OMP_NUM_THREADS=1"
         contents += 'PS1="[jh]$ "\n'
 
         output = open(os.path.join(self.inst_dir, 'setup.sh'), 'w')
