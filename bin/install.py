@@ -311,8 +311,9 @@ export DATACAT_CONFIG=%s
                 # Download the CCS package only when necessary:
                 # - if it is a SNAPSHOT version
                 # - if it is a released version and it does not exist in the ccs install directory
-                base_url = "http://repo-nexus.lsst.org/nexus/repository/ccs-maven2-public/org/lsst/"
-                command = 'wget --progress=dot:mega "%(base_url)s/%(package_name)s/%(package_version)s/%(package_name)s-%(package_version)s-dist.zip" -O temp.zip' % locals()
+
+                base_url = "http://repo-nexus.lsst.org/nexus/service/rest/v1/search/assets?repository=ccs-maven2-public&maven.groupId=org.lsst&maven.classifier=dist&maven.extension=zip&sort=version"
+                command = 'wget --progress=dot:mega "%(base_url)s&maven.artifactId=%(package_name)s&maven.baseVersion=%(package_version)s" -O temp.zip' % locals()
                 subprocess.call(command, shell=True, executable=self._executable)
                 if os.path.isdir(subdir):
                     subprocess.call('rm -r %(subdir)s' % locals(), shell=True, executable=self._executable)
