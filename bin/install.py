@@ -152,6 +152,7 @@ setup obs_lsst
         contents += self._schema_paths()
         contents += self._python_configs()
         contents += "export OMP_NUM_THREADS=1\n"
+        contents += "export MPLBACKEND=svg\n"
         contents += 'PS1="[jh]$ "\n'
 
         output = open(os.path.join(self.inst_dir, 'setup.sh'), 'w')
