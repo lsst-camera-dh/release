@@ -5,7 +5,7 @@ lcatr-schema = 0.7.0
 lcatr-modulefiles = 0.4.0
 
 [eups_packages]
-eotest = 1.1.1
+eotest = 1.1.2
 obs_lsst = 1.0.0-rc
 
 [packages]
@@ -17,7 +17,7 @@ config_files = 0.0.12
 jh-ccs-utils = 0.1.10
 IandT-jobs = 0.3.0
 jh-dev-tools = 0.2.0
-EO-analysis-jobs = 1.1.2
+EO-analysis-jobs = 1.2.0
 
 [dmstack]
 stack_dir = /gpfs/slac/lsst/fs3/g/software/stack/v19.0.0_gcc8
