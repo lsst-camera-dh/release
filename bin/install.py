@@ -64,7 +64,7 @@ class Installer(object):
                              "make",
                              "make install",
                              "cd %(inst_dir)s"]) % locals()
-        subprocess.call(commands, shell=True, executable=self._executable)
+        subprocess.check_call(commands, shell=True, executable=self._executable)
 
     @staticmethod
     def github_download(package_name, version):
@@ -77,7 +77,7 @@ class Installer(object):
         commands = ["curl -L -O " + url,
                     "tar xzf %(version)s.tar.gz" % locals()]
         for command in commands:
-            subprocess.call(command, shell=True,
+            subprocess.check_call(command, shell=True,
                             executable=Installer._executable)
 
     @staticmethod
@@ -91,7 +91,7 @@ class Installer(object):
         else:
             commands = ['git clone --branch '+version+' '+'/'.join((Installer._github_org, package_name))+' '+dir_name]
 
-        subprocess.call(commands, shell=True,
+        subprocess.check_call(commands, shell=True,
                             executable=Installer._executable)
 
         Installer.ccs_symlink(package_name, dir_name)
@@ -102,7 +102,7 @@ class Installer(object):
         inst_dir = self.inst_dir
         python_exec = self.python_exec
         command = "cd %(package_name)s-%(version)s/; %(python_exec)s setup.py install --prefix=%(inst_dir)s" % locals()
-        subprocess.call(command, shell=True, executable=self._executable)
+        subprocess.check_call(command, shell=True, executable=self._executable)
 
     @property
     def package_dirs(self):
@@ -234,12 +234,12 @@ export DATACAT_CONFIG=%s
         self.lcatr_install('lcatr-schema')
         self.lcatr_install('lcatr-modulefiles')
         inst_dir = self.inst_dir
-        subprocess.call('ln -sf %(inst_dir)s/share/modulefiles %(inst_dir)s/Modules' % locals(), shell=True, executable=self._executable)
-        subprocess.call('touch `ls -d %(inst_dir)s/lib/python*/site-packages/lcatr`/__init__.py' % locals(), shell=True, executable=self._executable)
+        subprocess.check_call('ln -sf %(inst_dir)s/share/modulefiles %(inst_dir)s/Modules' % locals(), shell=True, executable=self._executable)
+        subprocess.check_call('touch `ls -d %(inst_dir)s/lib/python*/site-packages/lcatr`/__init__.py' % locals(), shell=True, executable=self._executable)
         hj_version = self.pars['harnessed-jobs']
         self.github_download('harnessed-jobs', hj_version)
         for folder in self.hj_folders:
-            subprocess.call('ln -sf %(inst_dir)s/harnessed-jobs-%(hj_version)s/%(folder)s/* %(inst_dir)s/share' % locals(), shell=True, executable=self._executable)
+            subprocess.check_call('ln -sf %(inst_dir)s/harnessed-jobs-%(hj_version)s/%(folder)s/* %(inst_dir)s/share' % locals(), shell=True, executable=self._executable)
         self.eups_package_installer()
         self.package_installer()
         self.write_setup()
@@ -258,7 +258,7 @@ export DATACAT_CONFIG=%s
         for package, version in pars.items():
             self.github_download(package, version)
             commands = """source %(stack_dir)s/loadLSST.bash; export EUPS_PATH=%(inst_dir)s/eups:${EUPS_PATH}; cd %(package)s-%(version)s/; eups declare %(package)s %(version)s -r . -c; setup %(package)s; scons opt=3""" % locals()
-            subprocess.call(commands, shell=True, executable=self._executable)
+            subprocess.check_call(commands, shell=True, executable=self._executable)
 
     def package_installer(self):
         try:
@@ -272,7 +272,7 @@ export DATACAT_CONFIG=%s
             hj_dir = "%(inst_dir)s/%(package_dir)s/harnessed_jobs" % locals()
             if os.path.isdir(hj_dir):
                 command = 'ln -sf %(hj_dir)s/* %(inst_dir)s/share' % locals()
-                subprocess.call(command, executable=self._executable,
+                subprocess.check_call(command, executable=self._executable,
                                 shell=True)
 
     def jh_test(self):
@@ -282,7 +282,7 @@ export DATACAT_CONFIG=%s
             pars['eotest']
             hj_version = self.pars['harnessed-jobs']
             command = 'source ./setup.sh; python harnessed-jobs-%(hj_version)s/tests/setup_test.py' % locals()
-            subprocess.call(command, shell=True, executable=self._executable)
+            subprocess.check_call(command, shell=True, executable=self._executable)
             os.chdir(self.curdir)
         except (configparser.NoSectionError, KeyError):
             pass
@@ -315,11 +315,11 @@ export DATACAT_CONFIG=%s
 
                 base_url = "http://repo-nexus.lsst.org/nexus/service/rest/v1/search/assets/download?repository=ccs-maven2-public&maven.groupId=org.lsst&maven.classifier=dist&maven.extension=zip&sort=version"
                 command = 'wget --progress=dot:mega "%(base_url)s&maven.artifactId=%(package_name)s&maven.baseVersion=%(package_version)s" -O temp.zip' % locals()
-                subprocess.call(command, shell=True, executable=self._executable)
+                subprocess.check_call(command, shell=True, executable=self._executable)
                 if os.path.isdir(subdir):
-                    subprocess.call('rm -r %(subdir)s' % locals(), shell=True, executable=self._executable)
-                subprocess.call('unzip -uoqq temp.zip', shell=True, executable=self._executable)
-                subprocess.call('rm temp.zip', shell=True, executable=self._executable)
+                    subprocess.check_call('rm -r %(subdir)s' % locals(), shell=True, executable=self._executable)
+                subprocess.check_call('unzip -uoqq temp.zip', shell=True, executable=self._executable)
+                subprocess.check_call('rm temp.zip', shell=True, executable=self._executable)
                 self.ccs_symlink(package_name, subdir)
 
     @staticmethod
@@ -337,11 +337,11 @@ export DATACAT_CONFIG=%s
                 print("Updating symlink {} ---> {}".format(symlinkName,
                                                            symlinkTarget))
                 createSymlink = True
-                subprocess.call('rm %(symlinkName)s' % locals(), shell=True,
+                subprocess.check_call('rm %(symlinkName)s' % locals(), shell=True,
                                 executable=Installer._executable)
 
         if createSymlink:
-            subprocess.call('ln -sf %(symlinkTarget)s %(symlinkName)s'
+            subprocess.check_call('ln -sf %(symlinkTarget)s %(symlinkName)s'
                             % locals(), shell=True, executable=Installer._executable)
 
     def ccs(self, args, section='ccs'):
