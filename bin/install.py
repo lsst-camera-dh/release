@@ -15,7 +15,9 @@ class Parfile(dict):
         super(Parfile, self).__init__()
         parser = configparser.ConfigParser()
         parser.optionxform = str
-        parser.read(infile)
+        result = parser.read(infile)
+        if not result:
+            raise RuntimeError("invalid or empty config file: {f}".format(f=infile))
         for key, value in parser.items(section):
             self[key] = self._cast(value)
     def _cast(self, value):
