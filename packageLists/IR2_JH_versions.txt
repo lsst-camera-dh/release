@@ -6,7 +6,6 @@ lcatr-modulefiles = 0.4.0
 
 [eups_packages]
 eotest = 1.1.2
-EO-utilities = master
 obs_lsst = 1.0.0-rc
 
 [packages]
@@ -27,3 +26,4 @@ stack_dir = /gpfs/slac/lsst/fs3/g/software/stack/v19.0.0_gcc8
 datacatdir = /lsst/dh/software/centos7-gcc48/dev/datacat/0.4
 datacat_config = /lsst/dh/software/centos7-gcc48/dev/datacat/config.cfg
 modules_dir = /gpfs/slac/lsst/fs2/u1/dh/software/centos7-gcc48/prod/Modules
+eo_utilities_dir = /gpfs/slac/lsst/fs2/u1/dh/software/centos7-gcc48/prod/EO-utilities

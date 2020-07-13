@@ -32,7 +32,6 @@ class Parfile(dict):
 
 def get_package_name(package):
     pattern = os.path.join(package + '*', 'ups', '*.table')
-    print(pattern)
     return os.path.basename(glob.glob(pattern)[0]).split('.')[0]
 
 
@@ -133,7 +132,7 @@ class Installer(object):
                 self._third_party_pars = Parfile(self.version_file,
                                                  'third_party')
             except configparser.NoSectionError:
-                pass
+                self._third_party_pars = dict()
         return self._third_party_pars
 
     def write_setup(self):
@@ -145,6 +144,9 @@ export EUPS_PATH=${INST_DIR}/eups:${EUPS_PATH}
 """ % self.stack_dir
 
         contents += self._eups_config()
+        if 'eo_utilities_dir' in self.third_party_pars:
+            eo_utilities_dir = self.third_party_pars['eo_utilities_dir']
+            contents += 'setup -r %(eo_utilities_dir)s\n' % locals()
         contents += self._jh_config()
         contents += self._package_env_vars()
         contents += self._schema_paths()
@@ -215,12 +217,12 @@ export SITENAME=%(site)s
         python_dirs = [os.path.join('${'+self._env_var(x)+'}', 'python')
                        for x in self.package_dirs]
         third_party_pars = self.third_party_pars
-        if third_party_pars is not None:
+        if 'datacatdir' in third_party_pars:
             python_dirs.append('${DATACATDIR}')
         python_dirs.extend(['${HARNESSEDJOBSDIR}/python', self._module_path(),
                             '${PYTHONPATH}'])
         python_configs = ''
-        if third_party_pars is not None:
+        if 'datacatdir' in third_party_pars:
             python_configs += """export DATACATDIR=%s/lib
 export DATACAT_CONFIG=%s
 """ % (os.path.join(third_party_pars['datacatdir']), third_party_pars['datacat_config'])
@@ -258,8 +260,6 @@ export DATACAT_CONFIG=%s
         for package, version in pars.items():
             if package == 'obs_lsst':
                 scons_command = 'scons lib python shebang examples doc policy python/lsst/obs/lsst/version.py'
-            elif package == 'EO-utilities':
-                scons_command = ''
             else:
                 scons_command = 'scons'
             if version == 'master':
