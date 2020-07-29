@@ -164,7 +164,8 @@ export EUPS_PATH=${INST_DIR}/eups:${EUPS_PATH}
             pars = Parfile(self.version_file, 'eups_packages')
         except configparser.NoSectionError:
             return ''
-        return '\n'.join(['setup %s' % get_package_name(package)
+        return '\n'.join(['setup lsst_distrib'] +
+                         ['setup %s' % get_package_name(package)
                           for package in pars]) + '\n'
 
     def _jh_config(self):
