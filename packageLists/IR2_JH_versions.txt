@@ -5,18 +5,18 @@ lcatr-schema = 0.7.0
 lcatr-modulefiles = 0.4.0
 
 [eups_packages]
-eotest = 1.2.1
+eotest = 1.2.2
 
 [packages]
-sequencer-files = 0.2.0
+sequencer-files = 0.2.1
 eTraveler-clientAPI = 1.7.1
 metrology-data-analysis = 0.0.14
 camera-model = 0.1.5
 config_files = 0.0.12
-jh-ccs-utils = 0.2.0
-IandT-jobs = 0.3.0
+jh-ccs-utils = 0.2.1
+IandT-jobs = 0.3.1
 jh-dev-tools = 0.2.0
-EO-analysis-jobs = 1.4.3
+EO-analysis-jobs = 1.5.1
 
 [dmstack]
 stack_dir = /gpfs/slac/lsst/fs3/g/software/stack/v20.0.0
