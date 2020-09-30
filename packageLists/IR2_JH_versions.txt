@@ -13,8 +13,8 @@ eTraveler-clientAPI = 1.7.1
 metrology-data-analysis = 0.0.14
 camera-model = 0.1.5
 config_files = 0.0.12
-jh-ccs-utils = 0.2.1
-IandT-jobs = 0.3.1
+jh-ccs-utils = 0.2.2
+IandT-jobs = 0.4.0
 jh-dev-tools = 0.2.0
 EO-analysis-jobs = 1.5.1
 
