@@ -1,24 +1,29 @@
-[jh]
-harnessed-jobs = 0.4.93
-lcatr-harness = 0.16.0
-lcatr-schema = 0.6.0
+B[jh]
+harnessed-jobs = 0.4.66
+lcatr-harness = 0.18.2
+lcatr-schema = 0.7.0
 lcatr-modulefiles = 0.4.0
 
 [eups_packages]
-eotest = 0.1.2
+eotest = 1.2.4
 
 [packages]
-camera-model = 0.1.2
-jh-ccs-utils = 0.1.3
-jh-dev-tools = 0.1.0
-EO-analysis-jobs = 0.1.3
+sequencer-files = 0.2.1
 eTraveler-clientAPI = 1.7.1
+metrology-data-analysis = 0.0.14
+camera-model = 0.1.5
 config_files = 1.0.1
-comcam-jobs = 1.0.0
+jh-ccs-utils = 0.2.3
+IandT-jobs = 0.4.1
+jh-dev-tools = 0.2.0
+EO-analysis-jobs = 1.5.2
+datacat-utilities = 0.1.4
 
 [dmstack]
-stack_dir = /lsst/dh/software/centos7-gcc48/stack/v16_py3
+stack_dir = /home/gmorris/lsst_stack-20.0.0/
 
-[datacat]
+[third_party]
 datacatdir = /lsst/dh/software/centos7-gcc48/dev/datacat/0.4
 datacat_config = /lsst/dh/software/centos7-gcc48/dev/datacat/config.cfg
+modules_dir = /gpfs/slac/lsst/fs2/u1/dh/software/centos7-gcc48/prod/Modules
+eo_utilities_dir = /gpfs/slac/lsst/fs2/u1/dh/software/centos7-gcc48/prod/EO-utilities
