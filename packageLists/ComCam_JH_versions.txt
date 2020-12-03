@@ -6,6 +6,7 @@ lcatr-modulefiles = 0.4.0
 
 [eups_packages]
 eotest = 1.2.4
+EO-utilities = v0.6
 
 [packages]
 sequencer-files = 0.2.1
@@ -18,7 +19,6 @@ IandT-jobs = 0.4.1
 jh-dev-tools = 0.2.0
 EO-analysis-jobs = 1.5.2
 datacat-utilities = 0.1.4
-EO-utilities = v0.6
 
 [dmstack]
 stack_dir = /home/gmorris/lsst_stack-20.0.0/
