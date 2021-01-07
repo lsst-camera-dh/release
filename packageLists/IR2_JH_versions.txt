@@ -5,7 +5,8 @@ lcatr-schema = 0.7.0
 lcatr-modulefiles = 0.4.0
 
 [eups_packages]
-eotest = 1.2.6
+eotest = 1.2.7
+obs_lsst = 1.1.0-rc
 
 [packages]
 sequencer-files = 0.2.1
@@ -13,13 +14,13 @@ eTraveler-clientAPI = 1.7.1
 metrology-data-analysis = 0.0.14
 camera-model = 0.1.5
 config_files = 0.0.12
-jh-ccs-utils = 0.2.3
+jh-ccs-utils = 0.2.4
 IandT-jobs = 0.4.1
 jh-dev-tools = 0.2.0
-EO-analysis-jobs = 1.5.3
+EO-analysis-jobs = 1.5.4
 
 [dmstack]
-stack_dir = /gpfs/slac/lsst/fs3/g/software/stack/v20.0.0
+stack_dir = /gpfs/slac/lsst/fs3/g/software/stack/v21.0.0
 
 [third_party]
 datacatdir = /lsst/dh/software/centos7-gcc48/dev/datacat/0.4
