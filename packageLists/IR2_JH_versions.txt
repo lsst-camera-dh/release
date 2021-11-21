@@ -5,7 +5,7 @@ lcatr-schema = 0.7.0
 lcatr-modulefiles = 0.4.0
 
 [eups_packages]
-eotest = 1.3.2
+eotest = 1.4.0
 obs_lsst = 1.1.0-rc
 
 [packages]
@@ -14,16 +14,16 @@ eTraveler-clientAPI = 1.7.1
 metrology-data-analysis = 0.0.14
 camera-model = 0.1.5
 config_files = 0.0.12
-jh-ccs-utils = 0.2.5
-IandT-jobs = 0.4.2
+jh-ccs-utils = 0.2.6
+IandT-jobs = 0.4.3
 jh-dev-tools = 0.2.0
-EO-analysis-jobs = 1.5.11
+EO-analysis-jobs = 1.5.12
 
 [dmstack]
 stack_dir = /gpfs/slac/lsst/fs3/g/software/stack/v21.0.0
 
 [third_party]
-datacatdir = /lsst/dh/software/centos7-gcc48/dev/datacat/0.4
-datacat_config = /lsst/dh/software/centos7-gcc48/dev/datacat/config.cfg
+datacat_dir = /gpfs/slac/lsst/fs2/u1/dh/software/centos7-gcc48/prod/datacat/lib/python3.7/site-packages
+datacat_utilities_dir = /gpfs/slac/lsst/fs2/u1/dh/software/centos7-gcc48/prod/datacat-utilities/python
 modules_dir = /gpfs/slac/lsst/fs2/u1/dh/software/centos7-gcc48/prod/Modules
 eo_utilities_dir = /gpfs/slac/lsst/fs2/u1/dh/software/centos7-gcc48/prod/EO-utilities
