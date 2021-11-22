@@ -217,17 +217,13 @@ export SITENAME=%(site)s
     def _python_configs(self):
         python_dirs = [os.path.join('${'+self._env_var(x)+'}', 'python')
                        for x in self.package_dirs]
-        third_party_pars = self.third_party_pars
-        if 'datacatdir' in third_party_pars:
-            python_dirs.append('${DATACATDIR}')
+        for package_dir, path in self.third_party_pars.items():
+            if package_dir in ('modules_dir', 'eo_utilities_dir'):
+                continue
+            python_dirs.append(path)
         python_dirs.extend(['${HARNESSEDJOBSDIR}/python', self._module_path(),
                             '${PYTHONPATH}'])
-        python_configs = ''
-        if 'datacatdir' in third_party_pars:
-            python_configs += """export DATACATDIR=%s/lib
-export DATACAT_CONFIG=%s
-""" % (os.path.join(third_party_pars['datacatdir']), third_party_pars['datacat_config'])
-        python_configs += "export PYTHONPATH=%s\n" % ":".join(python_dirs)
+        python_configs = "export PYTHONPATH=%s\n" % ":".join(python_dirs)
         return python_configs
 
     def jh(self):
