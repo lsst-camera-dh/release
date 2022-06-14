@@ -5,7 +5,7 @@ lcatr-schema = 0.7.0
 lcatr-modulefiles = 0.4.0
 
 [eups_packages]
-eotest = 1.4.1
+eotest = 1.4.2
 obs_lsst = 1.1.0-rc
 
 [packages]
@@ -15,9 +15,9 @@ metrology-data-analysis = 0.0.14
 camera-model = 0.1.5
 config_files = 0.0.12
 jh-ccs-utils = 0.3.0
-IandT-jobs = 0.4.3
+IandT-jobs = 0.4.4
 jh-dev-tools = 0.2.0
-EO-analysis-jobs = 1.5.13
+EO-analysis-jobs = 1.6.0
 
 [dmstack]
 stack_dir = /gpfs/slac/lsst/fs3/g/software/stack/v21.0.0
