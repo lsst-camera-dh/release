@@ -1,0 +1,18 @@
+[jh]
+harnessed-jobs = 0.4.66
+lcatr-harness = 0.18.2
+lcatr-schema = 0.7.0
+lcatr-modulefiles = 0.4.0
+
+[eups_packages]
+eo_pipe = 0.9.0
+
+[packages]
+eTraveler-clientAPI = 1.7.1
+
+[dmstack]
+stack_dir = /cvmfs/sw.lsst.eu/linux-x86_64/lsst_distrib/v24.0.0
+
+[third_party]
+modules_dir = /fs/ddn/sdf/group/lsst/software/IandT/Modules
+eo_utilities_dir = /fs/ddn/sdf/group/lsst/software/IandT/EO-utilities
